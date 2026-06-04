@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin CMS - TechPost</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-12">
+
+  <nav class="bg-slate-800 border-b border-slate-700 p-4 shadow-md sticky top-0 z-40">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold text-cyan-400">🛠️ TechPost CMS Dashboard</h1>
+      <a href="index.html" class="text-xs bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition">Lihat Web Utama</a>
+    </div>
+  </nav>
+
+  <main class="container mx-auto px-4 my-8 max-w-4xl">
+    
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl mb-8">
+      <h2 id="form-title" class="text-2xl font-extrabold text-white mb-6">Tulis Artikel Teknologi Baru</h2>
+      
+      <form id="post-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Password Admin</label>
+          <input type="password" id="password" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="Masukkan password keamanan">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Judul Berita</label>
+            <input type="text" id="judul" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="Contoh: Chip Kuantum Mulai Diproduksi Massal">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Kategori</label>
+            <select id="kategori" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition">
+              <option value="Gadget">Gadget</option>
+              <option value="Software">Software</option>
+              <option value="AI & Future">AI & Future</option>
+              <option value="Cybersecurity">Cybersecurity</option>
+              <option value="Game">Game</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">URL Gambar Sampul</label>
+          <input type="url" id="gambar" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="https://images.unsplash.com/...">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Isi Konten Berita</label>
+          <textarea id="konten" rows="6" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="Tulis detail artikel di sini..."></textarea>
+        </div>
+
+        <div class="flex gap-3">
+          <button type="submit" id="submit-btn" class="flex-grow bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3.5 rounded-xl cursor-pointer shadow-lg transition">
+            Publish Artikel 🚀
+          </button>
+          <button type="button" id="cancel-btn" onclick="resetFormState()" class="hidden bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold px-6 rounded-xl transition">
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
+      <h2 class="text-xl font-bold text-white mb-4">Kelola Postingan Berita</h2>
+      
+      <div id="loading-list" class="text-slate-400 text-sm py-4 animate-pulse">Memuat daftar artikel...</div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse hidden" id="articles-table">
+          <thead>
+            <tr class="border-b border-slate-700 text-slate-400 text-xs uppercase tracking-wider">
+              <th class="py-3 px-4">Judul</th>
+              <th class="py-3 px-4">Kategori</th>
+              <th class="py-3 px-4">Tanggal</th>
+              <th class="py-3 px-4 text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="text-sm divide-y divide-slate-700/50">
+            </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // ⚠️ PASTIKAN TEMPELKAN URL WEB APP (/exec) YANG BARU DI SINI
+    const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
+    
+    let localArticles = [];
+    let currentAction = "add"; // Status form: "add" atau "edit"
+    let targetArticleId = null; // Menyimpan ID saat mengedit
+
+    // 1. Ambil data saat halaman dibuka
+    async function fetchArticles() {
+      document.getElementById('loading-list').classList.remove('hidden');
+      document.getElementById('articles-table').classList.add('hidden');
+      
+      try {
+        const response = await fetch(API_URL);
+        localArticles = await response.json();
+        
+        const tbody = document.getElementById('table-body');
+        tbody.innerHTML = '';
+
+        localArticles.forEach(art => {
+          tbody.innerHTML += `
+            <tr class="hover:bg-slate-750/40 transition">
+              <td class="py-3 px-4 font-semibold text-white max-w-xs truncate">${art.judul}</td>
+              <td class="py-3 px-4"><span class="text-xs bg-slate-900 px-2 py-1 rounded text-cyan-400 border border-slate-700">${art.kategori}</span></td>
+              <td class="py-3 px-4 text-slate-400 text-xs">${art.tanggal}</td>
+              <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
+                <button onclick="prepareEdit(${art.id})" class="text-xs font-bold text-amber-400 hover:text-amber-300 transition cursor-pointer">Edit</button>
+                <button onclick="deleteArticle(${art.id})" class="text-xs font-bold text-red-400 hover:text-red-300 transition cursor-pointer">Hapus</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        document.getElementById('loading-list').classList.add('hidden');
+        document.getElementById('articles-table').classList.remove('hidden');
+      } catch (err) {
+        document.getElementById('loading-list').innerText = "Gagal memuat daftar postingan.";
+      }
+    }
+
+    // 2. Kirim data form (Tambah atau Edit)
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submit-btn');
+      const originalText = submitBtn.innerText;
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Sedang memproses...";
+
+      const payload = {
+        action: currentAction,
+        id: targetArticleId,
+        password: document.getElementById('password').value,
+        judul: document.getElementById('judul').value,
+        kategori: document.getElementById('kategori').value,
+        gambar: document.getElementById('gambar').value,
+        konten: document.getElementById('konten').value
+      };
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          alert("🎉 Sukses: " + result.message);
+          resetFormState();
+          fetchArticles(); // Refresh tabel data
+        } else {
+          alert("❌ Gagal: " + result.message);
+          submitBtn.disabled = false;
+          submitBtn.innerText = originalText;
+        }
+      } catch (err) {
+        alert("❌ Terjadi masalah koneksi ke API.");
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
+      }
+    }
+
+    // 3. Masuk ke Mode Edit & Isi Form
+    function prepareEdit(id) {
+      const art = localArticles.find(a => a.id === id);
+      if (!art) return;
+
+      currentAction = "edit";
+      targetArticleId = id;
+
+      // Isi elemen formulir dengan data lama
+      document.getElementById('judul').value = art.judul;
+      document.getElementById('kategori').value = art.kategori;
+      document.getElementById('gambar').value = art.gambar;
+      document.getElementById('konten').value = art.konten;
+
+      // Ubah UI Form
+      document.getElementById('form-title').innerText = "✏️ Edit Artikel (ID: " + id + ")";
+      document.getElementById('submit-btn').innerText = "Simpan Perubahan 💾";
+      document.getElementById('cancel-btn').classList.remove('hidden');
+      
+      // Scroll otomatis ke atas (ke arah form)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 4. Hapus Artikel
+    async function deleteArticle(id) {
+      const konfirmasi = confirm("Apakah kamu yakin ingin menghapus artikel ini secara permanen?");
+      if (!konfirmasi) return;
+
+      const passwordPrompt = document.getElementById('password').value;
+      if (!passwordPrompt) {
+        alert("Silakan isi kolom 'Password Admin' di form atas terlebih dahulu sebagai verifikasi hapus!");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const payload = {
+        action: "delete",
+        id: id,
+        password: passwordPrompt
+      };
+
+      try {
+        const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const result = await response.json();
+
+        if (result.status === "success") {
+          alert("🗑️ " + result.message);
+          fetchArticles();
+        } else {
+          alert("❌ Gagal menghapus: " + result.message);
+        }
+      } catch (err) {
+        alert("❌ Gagal menghubungi server.");
+      }
+    }
+
+    // 5. Reset status form kembali ke semula
+    function resetFormState() {
+      currentAction = "add";
+      targetArticleId = null;
+      document.getElementById('post-form').reset();
+      document.getElementById('form-title').innerText = "Tulis Artikel Teknologi Baru";
+      document.getElementById('submit-btn').innerText = "Publish Artikel 🚀";
+      document.getElementById('submit-btn').disabled = false;
+      document.getElementById('cancel-btn').classList.add('hidden');
+    }
+
+    // Jalankan load data saat halaman admin dibuka
+    window.onload = fetchArticles;
+  </script>
+</body>
+</html>
