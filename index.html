@@ -3,153 +3,211 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Device Squad - Portal Berita Gadget & Teknologi</title>
+  <title>Device Squad - Portal Info Gadget Terkini</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-12">
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
 
-  <nav class="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-40 p-4 shadow-lg">
+  <!-- NAVIGATION BAR -->
+  <nav class="bg-slate-800 border-b border-slate-700/60 p-4 shadow-lg sticky top-0 z-45">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center gap-2">
-        📱 <span>Device Squad</span>
-      </h1>
-      <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1.5 rounded-full font-mono flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live
-      </span>
+      <div class="flex items-center gap-3">
+        <div class="bg-cyan-500 h-6 w-6 rounded-md shadow-md shadow-cyan-500/20"></div>
+        <h1 class="text-xl font-black tracking-tight text-white uppercase">Device <span class="text-cyan-400">Squad</span></h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-700">Live</span>
+      </div>
     </div>
   </nav>
 
-  <section class="container mx-auto px-4 mt-6">
-    <div class="bg-slate-800 border border-slate-700/60 rounded-2xl p-4 shadow-md flex flex-col md:flex-row gap-4 justify-between items-center">
-      
+  <!-- MAIN HEADER & SEARCH BAR -->
+  <main class="container mx-auto px-4 my-8 flex-grow max-w-6xl">
+    
+    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-5 shadow-xl mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
+      <!-- Navigasi Filter Kategori -->
       <div id="category-filters" class="flex flex-wrap gap-2 w-full md:w-auto">
-        <button onclick="filterCategory('Semua')" id="btn-Semua" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-slate-700 text-slate-300 hover:bg-slate-600">
+        <button id="btn-semua" onclick="filterCategory('semua')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-slate-700 text-slate-300 hover:bg-slate-600">
           Semua
         </button>
-        <button onclick="filterCategory('Gadget')" id="btn-Gadget" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-cyan-500 text-slate-900 shadow-md shadow-cyan-500/20">
+        <button id="btn-Gadget" onclick="filterCategory('Gadget')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-cyan-500 text-slate-900 shadow-md shadow-cyan-500/20">
           Gadget
         </button>
-        
-        <button disabled id="btn-Software" class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/50 cursor-not-allowed opacity-40" title="Kategori dinonaktifkan sementara">
+        <!-- Kategori lain dibuat redup/disabled agar fokus ke Gadget terlebih dahulu -->
+        <button id="btn-Software" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
           Software
         </button>
-        <button disabled id="btn-AI" class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/50 cursor-not-allowed opacity-40" title="Kategori dinonaktifkan sementara">
+        <button id="btn-AIFuture" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
           AI & Future
         </button>
-        <button disabled id="btn-Cybersecurity" class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/50 cursor-not-allowed opacity-40" title="Kategori dinonaktifkan sementara">
+        <button id="btn-Cybersecurity" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
           Cybersecurity
         </button>
-        <button disabled id="btn-Game" class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/50 cursor-not-allowed opacity-40" title="Kategori dinonaktifkan sementara">
+        <button id="btn-Game" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
           Game
         </button>
       </div>
 
-      <div class="w-full md:w-72 relative">
-        <input type="text" id="search-input" oninput="handleSearch()" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition" placeholder="Cari info gadget...">
-        <span class="absolute right-3 top-3 text-slate-500 text-xs pointer-events-none">🔍</span>
+      <!-- Kotak Pencarian -->
+      <div class="relative w-full md:w-72">
+        <input type="text" id="search-input" oninput="handleSearch()" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition shadow-inner" placeholder="Cari info gadget...">
+        <span class="absolute right-3.5 top-3 text-slate-500 text-xs">🔍</span>
+      </div>
+    </div>
+
+    <!-- WRAPPER UTAMA DATA BERITA -->
+    <div>
+      <!-- Status Loading / Pesan Error -->
+      <div id="loading-status" class="text-center py-20 bg-slate-800/30 border border-dashed border-slate-700 rounded-2xl shadow-inner">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-cyan-500 border-t-transparent mb-4"></div>
+        <p class="text-slate-400 text-sm font-medium tracking-wide">Menghubungkan ke database Device Squad & memuat artikel...</p>
       </div>
 
-    </div>
-  </section>
+      <!-- Grid Tempat Kartu Artikel Muncul -->
+      <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+        <!-- Disuntikkan secara dinamis melalui JavaScript -->
+      </div>
 
-  <main class="container mx-auto px-4 mt-6">
-    
-    <div id="loading-status" class="text-center py-20">
-      <p class="text-slate-400 animate-pulse text-lg tracking-wide">Menghubungkan ke database Device Squad & memuat artikel...</p>
-    </div>
-
-    <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-    </div>
-
-    <div id="load-more-container" class="text-center mt-12 mb-6 hidden">
-      <button onclick="loadMore()" class="bg-slate-800 border border-slate-700 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 font-bold text-sm px-8 py-3.5 rounded-xl cursor-pointer transition shadow-lg inline-flex items-center gap-2">
-        🔄 Muat Lebih Banyak Berita
-      </button>
+      <!-- Tombol Load More -->
+      <div id="load-more-container" class="text-center mt-10 hidden">
+        <button onclick="loadMore()" class="bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 px-6 py-3 rounded-xl text-sm font-bold shadow-md hover:border-slate-600 transition cursor-pointer">
+          Muat Berita Lainnya 👇
+        </button>
+      </div>
     </div>
 
   </main>
 
-  <div id="article-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl">
-      <img id="modal-img" class="w-full h-64 object-cover" src="" alt="Detail Image">
-      <div class="p-6">
-        <div class="flex gap-2 items-center">
-          <span id="modal-category" class="text-xs font-semibold bg-cyan-950 text-cyan-400 px-2.5 py-1 rounded-md"></span>
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-600 tracking-wide mt-12">
+    <div class="container mx-auto px-4">
+      <p>&copy; 2026 <span class="text-slate-400 font-bold">Device Squad</span>. Ditenagai oleh Google Sheets API & GitHub Pages.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL BACA SELENGKAPNYA -->
+  <div id="article-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" onclick="closeModal()">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl flex flex-col" onclick="event.stopPropagation()">
+      
+      <!-- Modal Header Gambar -->
+      <div class="relative min-h-48 bg-slate-900">
+        <img id="modal-img" class="w-full h-64 object-cover" src="" alt="Cover">
+        <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-950/70 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer">✕</button>
+      </div>
+
+      <!-- Modal Konten Teks -->
+      <div class="p-6 overflow-y-auto">
+        <div class="flex items-center gap-3 mb-4">
+          <span id="modal-category" class="text-xs font-bold bg-cyan-950 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-900/50"></span>
           <span id="modal-date" class="text-xs text-slate-500"></span>
         </div>
-        <h2 id="modal-title" class="text-2xl font-extrabold mt-3 text-white"></h2>
-        <p id="modal-content" class="text-slate-300 mt-4 leading-relaxed whitespace-pre-wrap"></p>
         
-        <div class="mt-6 flex justify-between items-center border-t border-slate-700/60 pt-4">
-          <a id="modal-source-link" href="#" target="_blank" class="text-xs text-cyan-400 hover:underline flex items-center gap-1">
-            🌐 Baca Artikel Asli di Sumber Berita
-          </a>
-          
-          <button onclick="closeModal()" class="bg-slate-750 border border-slate-600 hover:bg-slate-700 text-white font-semibold text-sm px-5 py-2 rounded-xl cursor-pointer transition">
-            Tutup
-          </button>
+        <h2 id="modal-title" class="text-xl md:text-2xl font-extrabold text-white leading-snug mb-4"></h2>
+        
+        <div class="border-b border-slate-700/60 my-4"></div>
+        
+        <!-- Wadah Teks Paragraf Panjang Berita -->
+        <div id="modal-content" class="text-slate-300 text-sm leading-relaxed space-y-4 whitespace-pre-line">
+          <!-- Konten penuh masuk di sini -->
         </div>
 
+        <!-- Tombol Link Rujukan Sumber Asli -->
+        <div class="mt-8 pt-4 border-t border-slate-700/60 flex justify-end">
+          <a id="modal-source-link" href="#" target="_blank" class="text-xs bg-slate-900 border border-slate-700 text-cyan-400 hover:text-cyan-300 px-4 py-2.5 rounded-xl font-semibold shadow-md transition hidden">
+            Kunjungi Sumber Berita Asli 🌐
+          </a>
+        </div>
       </div>
+
     </div>
   </div>
 
+  <!-- CORE JAVASCRIPT ENGINE -->
   <script>
     // ⚠️ PASTIKAN URL WEB APP MACRO SESUAI SETELAH DEPLOY ULANG KODE.GS
-    const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxDCi_5kRt6_3Ab3c89LorDjv5O1EJaAFyTrxcMc10JD8SnyPYhJDkpIYWcBj6PSc8nTg/exec";
     
     let globalArticles = [];      
-    let currentCategory = "Gadget"; // ✨ SETEL BERANDA AWAL LANGSUNG KE GADGET
+    let currentCategory = "Gadget"; // Setel beranda awal langsung memfilter Gadget
     let searchQuery = "";         
     
     const ITEMS_PER_PAGE = 6;      
     let currentLimit = ITEMS_PER_PAGE; 
 
-    // 1. Memuat Data Utama
+    // 1. Ambil Data dari API
     async function loadArticles() {
       const loadingElement = document.getElementById('loading-status');
+      const gridElement = document.getElementById('articles-grid');
+      
       try {
+        console.log("Memulai koneksi database...");
         const response = await fetch(API_URL);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         globalArticles = await response.json();
+        console.log("Data diterima:", globalArticles);
 
-        loadingElement.classList.add('hidden');
-        document.getElementById('articles-grid').classList.remove('hidden');
+        if (loadingElement) loadingElement.classList.add('hidden');
+        if (gridElement) gridElement.classList.remove('hidden');
         
         applyFilterAndSearch(); 
 
       } catch (error) {
-        console.error("Error fetching data:", error);
-        loadingElement.innerHTML = `<p class="text-red-400 font-semibold">Gagal memuat data dari database Device Squad.</p>`;
+        console.error("Koneksi gagal:", error);
+        if (loadingElement) {
+          loadingElement.innerHTML = `
+            <p class="text-red-400 font-bold text-base">Gagal memuat basis data Device Squad.</p>
+            <p class="text-xs text-slate-500 mt-2 bg-slate-900/60 py-2 px-4 inline-block rounded-lg border border-slate-700/40">Sebab: ${error.message}</p>
+            <br>
+            <button onclick="loadArticles()" class="mt-4 bg-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl text-cyan-400 hover:bg-slate-600 transition cursor-pointer">Coba Hubungkan Ulang</button>
+          `;
+        }
       }
     }
 
-    // 2. Filter, Search, dan Pagination Pemrosesan
+    // 2. Pemrosesan Filter, Search, dan Batasan Tampilan (Pagination)
     function applyFilterAndSearch() {
       const gridElement = document.getElementById('articles-grid');
       const loadMoreContainer = document.getElementById('load-more-container');
+      
+      if (!gridElement) return;
       gridElement.innerHTML = ''; 
 
       const filtered = globalArticles.filter(art => {
-        const matchCategory = (currentCategory === "Semua" || art.kategori === currentCategory);
-        const textToSearch = (art.judul + " " + art.konten).toLowerCase();
+        // Mengamankan huruf besar-kecil kategori dari Google Sheets (.toLowerCase())
+        const kategoriArtikel = (art.kategori || "Gadget").trim().toLowerCase();
+        const kategoriTarget = currentCategory.trim().toLowerCase();
+        
+        const matchCategory = (kategoriTarget === "semua" || kategoriArtikel === kategoriTarget);
+        const textToSearch = ((art.judul || "") + " " + (art.konten || "")).toLowerCase();
         const matchSearch = textToSearch.includes(searchQuery.toLowerCase());
+        
         return matchCategory && matchSearch;
       });
 
       if (filtered.length === 0) {
         gridElement.innerHTML = `
-          <div class="text-center py-12 col-span-full">
-            <p class="text-slate-500">Tidak ada artikel gadget yang cocok dengan kriteria pencarianmu.</p>
+          <div class="text-center py-16 col-span-full">
+            <p class="text-slate-500 text-sm">Tidak ada artikel gadget yang cocok dengan kriteria tersebut.</p>
           </div>
         `;
-        loadMoreContainer.classList.add('hidden');
+        if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
         return;
       }
 
-      if (filtered.length > currentLimit) {
-        loadMoreContainer.classList.remove('hidden');
-      } else {
-        loadMoreContainer.classList.add('hidden');
+      if (loadMoreContainer) {
+        if (filtered.length > currentLimit) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
       }
 
       const itemsToRender = filtered.slice(0, currentLimit);
@@ -158,24 +216,27 @@
         const originalIndex = globalArticles.findIndex(a => a.id === art.id);
         const fallbackImg = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
 
+        // Membersihkan tag HTML kustom (<img...>) agar tidak merusak potongan deskripsi teks di kartu luar
+        const kontenBersih = (art.konten || "").replace(/<\/?[^>]+(>|$)/g, "");
+
         const cardHTML = `
-          <div class="bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-700/50 flex flex-col justify-between transition duration-300 hover:-translate-y-1 hover:shadow-cyan-500/10 hover:border-slate-600">
+          <div class="bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between transition duration-300 hover:-translate-y-1 hover:shadow-cyan-500/5 hover:border-slate-600">
             <div>
-              <img class="w-full h-48 object-cover bg-slate-700" src="${art.gambar || fallbackImg}" alt="Cover">
+              <img class="w-full h-48 object-cover bg-slate-950" src="${art.gambar || fallbackImg}" alt="Cover">
               <div class="p-5">
-                <span class="text-xs font-semibold bg-cyan-950/80 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-800/50">
+                <span class="text-xs font-semibold bg-cyan-950/80 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-800/30">
                   ${art.kategori || 'Gadget'}
                 </span>
-                <h2 class="text-xl font-bold mt-3 text-white line-clamp-2">
-                  ${art.judul}
+                <h2 class="text-base font-bold mt-3 text-white line-clamp-2 leading-snug">
+                  ${art.judul || 'Tanpa Judul'}
                 </h2>
-                <p class="text-slate-400 text-sm mt-2 line-clamp-3">
-                  ${art.konten}
+                <p class="text-slate-400 text-xs mt-2 line-clamp-3 leading-relaxed">
+                  ${kontenBersih}
                 </p>
               </div>
             </div>
             <div class="p-5 pt-0 flex justify-between items-center mt-4">
-              <span class="text-xs text-slate-500">${art.tanggal}</span>
+              <span class="text-[11px] text-slate-500 font-medium">${art.tanggal || ''}</span>
               <button onclick="openModal(${originalIndex})" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1 cursor-pointer">
                 Baca Selengkapnya &rarr;
               </button>
@@ -183,3 +244,68 @@
           </div>
         `;
         gridElement.innerHTML += cardHTML;
+      });
+    }
+
+    function loadMore() {
+      currentLimit += ITEMS_PER_PAGE; 
+      applyFilterAndSearch();         
+    }
+
+    // 3. Efek Visual Tombol Kategori Aktif
+    function filterCategory(category) {
+      currentLimit = ITEMS_PER_PAGE; 
+      currentCategory = category;
+      
+      const buttons = document.querySelectorAll('#category-filters button:not([disabled])');
+      buttons.forEach(btn => {
+        if (btn.id === `btn-${category}`) {
+          btn.className = "text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-cyan-500 text-slate-900 shadow-md shadow-cyan-500/20";
+        } else {
+          btn.className = "text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-slate-700 text-slate-300 hover:bg-slate-600";
+        }
+      });
+      applyFilterAndSearch(); 
+    }
+
+    function handleSearch() {
+      currentLimit = ITEMS_PER_PAGE; 
+      searchQuery = document.getElementById('search-input').value;
+      applyFilterAndSearch(); 
+    }
+
+    // 4. Manajemen Buka & Tutup Modal Baca Detail
+    function openModal(index) {
+      const art = globalArticles[index];
+      if (!art) return;
+      const fallbackImg = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
+      
+      document.getElementById('modal-title').innerText = art.judul || 'Tanpa Judul';
+      document.getElementById('modal-category').innerText = art.kategori || 'Gadget';
+      document.getElementById('modal-date').innerText = art.tanggal || '';
+      
+      // Menggunakan innerHTML agar tag gambar kustom di dalam konten Xiaomi kamu bisa meledak/tampil rapi di dalam modal
+      document.getElementById('modal-content').innerHTML = art.konten || ''; 
+      document.getElementById('modal-img').src = art.gambar || fallbackImg;
+      
+      const sourceLinkElement = document.getElementById('modal-source-link');
+      if (art.sumber && art.sumber !== "#" && art.sumber.trim() !== "") {
+        sourceLinkElement.href = art.sumber;
+        sourceLinkElement.classList.remove('hidden');
+      } else {
+        sourceLinkElement.classList.add('hidden'); 
+      }
+      
+      document.getElementById('article-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('article-modal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    window.onload = loadArticles;
+  </script>
+</body>
+</html>
