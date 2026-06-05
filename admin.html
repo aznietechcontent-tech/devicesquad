@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Device Squad - Ultimate Overlord Dashboard</title>
+  <title>Device Squad - AI Auto-Publisher Core</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body id="admin-body" class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between hidden">
 
-  <!-- NAVIGATION BAR -->
   <nav class="bg-slate-900 border-b border-slate-800/80 p-4 shadow-xl sticky top-0 z-50">
     <div class="container mx-auto max-w-6xl flex justify-between items-center">
       <div class="flex items-center gap-3">
         <img src="devicesquad.jpeg" alt="Logo" class="h-8 w-8 rounded-lg object-cover border border-slate-700/40">
         <div>
           <h1 class="text-sm font-black tracking-tight text-white uppercase leading-none">Device <span class="text-cyan-400">Squad</span></h1>
-          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Ultimate Overlord Engine v6.0</p>
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">AI Instant Publisher v8.0</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -30,14 +29,11 @@
     </div>
   </nav>
 
-  <!-- MAIN WORKSPACE -->
   <main class="container mx-auto px-4 my-8 flex-grow max-w-6xl space-y-8">
     
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <!-- LEFT SIDEBAR: LIVE PREVIEWS & TOOLS (4 COLS) -->
       <div class="space-y-6 lg:col-span-4">
         
-        <!-- LIVE MONITOR STATS -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
           <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Workspace Diagnostics</h3>
           <div class="grid grid-cols-2 gap-2">
@@ -51,46 +47,11 @@
             </div>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-            <span id="draft-status" class="text-emerald-400 font-medium">Workspace Stabil</span>
+            <span id="draft-status" class="text-emerald-400 font-medium">Workspace Ready</span>
             <button onclick="clearDraft()" class="text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-[9px] cursor-pointer">Reset Form 🗑️</button>
           </div>
         </div>
 
-        <!-- SMART AI EDITOR TOOLKIT -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
-          <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400">Smart AI Editor Toolkit</h3>
-          
-          <button type="button" onclick="aiOptimizeSpelling()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
-            <span class="text-base">✨</span>
-            <div>
-              <p class="font-bold text-white">Merapikan Bahasa & Typo</p>
-              <p class="text-[10px] text-slate-500">Ubah singkatan/tulisan acak jadi bahasa berita baku</p>
-            </div>
-          </button>
-
-          <button type="button" onclick="aiFormatSpecs()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
-            <span class="text-base">📋</span>
-            <div>
-              <p class="font-bold text-white">Auto-Format Spesifikasi</p>
-              <p class="text-[10px] text-slate-500">Ubah teks koma menjadi susunan list poin rapi</p>
-            </div>
-          </button>
-
-          <button type="button" onclick="aiGenerateHeadlines()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
-            <span class="text-base">💡</span>
-            <div>
-              <p class="font-bold text-white">Ide Judul Berita (Headline)</p>
-              <p class="text-[10px] text-slate-500">Buat ide judul menarik berdasarkan isi tulisan</p>
-            </div>
-          </button>
-
-          <div id="ai-headline-box" class="hidden p-3 bg-slate-950 border border-cyan-950 rounded-xl space-y-2">
-            <p class="text-[9px] font-black uppercase text-cyan-400">Rekomendasi Judul AI (Klik untuk pakai):</p>
-            <div id="headline-suggestions" class="space-y-1.5 text-[11px] text-slate-300"></div>
-          </div>
-        </div>
-
-        <!-- LIVE CARD PREVIEW -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
           <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Live Card Preview</h3>
           <div class="bg-slate-850 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-[390px]">
@@ -114,7 +75,6 @@
 
       </div>
 
-      <!-- RIGHT CONTENT: CORE PUBLISHER FORM (8 COLS) -->
       <div class="lg:col-span-8">
         <form id="article-form" onsubmit="submitArticle(event)" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
           
@@ -145,22 +105,15 @@
 
           <div class="space-y-1">
             <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Judul Berita</label>
-            <input type="text" id="judul" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-600" placeholder="Ketik judul info gadget di sini..." required>
+            <input type="text" id="judul" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-600" placeholder="Judul akan terbuat otomatis saat Anda mem-paste isi artikel..." required>
           </div>
 
           <div class="space-y-1">
-            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-1">
+            <div class="flex justify-between items-center pb-1">
               <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Materi Konten Artikel</label>
-              <div class="flex items-center gap-2">
-                <a href="https://www.instagram.com/devicesquad/" target="_blank" class="text-[9px] font-black uppercase tracking-wider bg-slate-950 hover:bg-slate-800 text-pink-400 px-2.5 py-1 rounded border border-slate-800 shadow-sm transition flex items-center gap-1">
-                  📸 IG Device Squad &rarr;
-                </a>
-                <button type="button" onclick="cleanInstagramCaption()" class="text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-2.5 py-1 rounded border border-pink-500/20 shadow-sm transition cursor-pointer">
-                  ✨ Bersihkan Teks IG
-                </button>
-              </div>
+              <span class="text-[9px] bg-cyan-950 text-cyan-400 px-2 py-0.5 rounded border border-cyan-900 font-mono">⚡ Auto-AI Expander Active</span>
             </div>
-            <textarea id="konten" oninput="syncCardPreview(); trackContentStats();" rows="9" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition leading-relaxed" placeholder="Tulis atau paste materi berita di sini..." required></textarea>
+            <textarea id="konten" onpaste="handleAutoPasteExpander(event)" oninput="syncCardPreview(); trackContentStats();" rows="12" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition leading-relaxed" placeholder="LANGKAH ULTRA SIMPEL:&#10;Cukup salin caption dari Instagram, lalu klik kanan dan PASTE di sini. &#10;&#10;Sistem AI akan langsung merombak struktur kalimatnya secara instan menjadi artikel formal, panjang, luwes, dan aman dari blokir AdSense!" required></textarea>
           </div>
 
           <div class="pt-1">
@@ -173,12 +126,11 @@
       </div>
     </div>
 
-    <!-- PANEL DATABASE DENGAN GLOBAL LIVE SEARCH & ACTION ENGINE -->
     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
       <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4 border-b border-slate-800 pb-4">
         <div>
           <h3 class="text-xs font-black uppercase tracking-wider text-white">Interactive Database Controller</h3>
-          <p class="text-[10px] text-slate-500">Cari, filter, dan load data langsung dari cloud server utama</p>
+          <p class="text-[10px] text-slate-500">Daftar artikel yang sudah mengudara di website live kamu</p>
         </div>
         
         <div class="flex flex-wrap items-center gap-2">
@@ -187,7 +139,6 @@
         </div>
       </div>
       
-      <!-- Tabel Monitoring Interaktif -->
       <div class="overflow-x-auto rounded-xl border border-slate-800/80 bg-slate-950/40">
         <table class="w-full text-left text-xs border-collapse">
           <thead>
@@ -210,35 +161,94 @@
   </main>
 
   <footer class="bg-slate-950 border-t border-slate-900 py-3 text-center text-[9px] text-slate-600 tracking-wider">
-    <p>&copy; 2026 Device Squad Cyber Core. Full Command Protocol Online.</p>
+    <p>&copy; 2026 Device Squad Cyber Core. Full AI Integration Protocol Online.</p>
   </footer>
 
-  <!-- CORE DASHBOARD LOGIC ENGINE -->
   <script>
-    const SECURITY_PIN = "1234"; // Password login admin kamu
+    const SECURITY_PIN = "1234"; 
     const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     const DRAFT_KEY = "device_squad_draft_content";
     
-    let cacheDatabaseMemory = []; // Menyimpan salinan data server di memori lokal browser
+    let cacheDatabaseMemory = [];
 
-    // 1. GATEKEEPER SECURITY & AUTO-LOAD
+    // 1. GATEKEEPER & AUTO-LOAD
     (function checkSecurity() {
       const inputPass = prompt("🔑 Device Squad Protection Layer:\nMasukkan Password/PIN Akses Publisher Admin:");
       if (inputPass === SECURITY_PIN) {
         document.getElementById('admin-body').classList.remove('hidden');
-        
-        // OTOMATIS AMBIL DATA BEGITU LOGIN BERHASIL (Mencegah Kebingungan)
-        setTimeout(() => {
-          fetchLiveDatabase();
-        }, 500);
-
+        setTimeout(() => { fetchLiveDatabase(); }, 500);
       } else {
         alert("❌ Akses Ditolak!");
         window.location.href = "index.html";
       }
     })();
 
-    // 2. INTERACTIVE DATABASE READER & INJECTOR ENGINE
+    // 2. LOGIKA OTOMATIS SAAT USER MELAKUKAN PASTE TERSUNTIKKAN EVENT LISTENER
+    function handleAutoPasteExpander(event) {
+      // Ambil text murni dari clipboard browser sebelum masuk ke textarea
+      const clipboardData = event.clipboardData || window.clipboardData;
+      let pastedText = clipboardData.getData('Text').trim();
+
+      if (!pastedText) return;
+
+      // Cek apakah teks ini tampak seperti caption IG baru (bukan artikel yang sedang di-edit dari tabel bawah)
+      // Jika teks yang di-paste sudah panjang (diatas 400 karakter), kita asumsikan user sedang melakukan edit biasa.
+      if (pastedText.length > 400 && !pastedText.includes('#')) {
+         return; // Lewati pemrosesan otomatis agar tidak merusak proses editing normal
+      }
+
+      // Hentikan proses paste bawaan HTML agar tidak terjadi penumpukan teks ganda
+      event.preventDefault();
+
+      // PROSES ALGORITMA PEMBERSIHAN & EKSPANSI AI ANTI-ADSENSE BANNED
+      pastedText = pastedText.replace(/#\w+/g, ''); // Hapus Hashtag
+      pastedText = pastedText.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, ''); // Hapus Emoji Medsos
+
+      // Kamus Konversi Bahasa Kasual Medsos ke Jurnalistik Media Massa
+      const slangDict = {
+        " yg ": " yang ", " dngn ": " dengan ", " dgn ": " dengan ", " ttg ": " tentang ",
+        " bnyk ": " banyak ", " hp ": " smartphone ", " sdh ": " sudah ", " blm ": " belum ",
+        " jd ": " jadi ", " tp ": " tetapi ", " dapet ": " mendapatkan ", " spek ": " spesifikasi ",
+        " murah ": " kompetitif ", " rilis ": " resmi diperkenalkan ", " batre ": " kapasitas daya baterai ",
+        " jg ": " juga ", " kmrn ": " beberapa waktu lalu ", " bwt ": " untuk ", " dlm ": " dalam ",
+        " gila ": " sangat luar biasa ", " worth it ": " sangat direkomendasikan ", " wortit ": " direkomendasikan "
+      };
+      Object.keys(slangDict).forEach(key => {
+        pastedText = pastedText.replace(new RegExp(key, "gi"), slangDict[key]);
+      });
+
+      // Deteksi Brand Otomatis untuk Kustomisasi Teks Pengantar
+      let brandDetected = "perangkat teknologi terbaru";
+      const lowered = pastedText.toLowerCase();
+      if (lowered.includes("xiaomi")) brandDetected = "lini produk Xiaomi";
+      else if (lowered.includes("samsung")) brandDetected = "ekosistem Samsung";
+      else if (lowered.includes("iphone") || lowered.includes("apple")) brandDetected = "perangkat premium Apple";
+      else if (lowered.includes("vivo")) brandDetected = "vendor teknologi Vivo";
+      else if (lowered.includes("oppo")) brandDetected = "pabrikan ponsel Oppo";
+      else if (lowered.includes("infinix")) brandDetected = "jenama naik daun Infinix";
+
+      // Perakitan Struktur Artikel Profesional
+      let paragraphPembuka = `Perkembangan industri teknologi global kembali bergerak dinamis dengan hadirnya inovasi terbaru. Kali ini, perhatian pasar tertuju pada pergerakan pasar ${brandDetected} yang digadang-gadang siap menghadirkan perubahan signifikan bagi para pengguna setianya di Indonesia.`;
+      let paragraphInti = pastedText.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+      let paragraphPenutup = `Secara keseluruhan, langkah taktis yang diambil oleh produsen ini mempertegas ketatnya persaingan di sektor komputasi bergerak saat ini. Menarik untuk dinantikan bagaimana respons pasar lokal dan sejauh mana produk ini mampu mendominasi pasar dalam beberapa kuartal ke depan.`;
+
+      // Gabungkan Hasil Akhir ke Kolom Textarea
+      document.getElementById('konten').value = `${paragraphPembuka}\n\n${paragraphInti}\n\n${paragraphPenutup}`;
+
+      // JIKA INPUT JUDUL KOSONG, BUATKAN JUDUL SECARA OTOMATIS
+      const judulInput = document.getElementById('judul');
+      if (!judulInput.value.trim() || judulInput.value.startsWith("Judul akan terbuat")) {
+        let keywordJudul = brandDetected.toUpperCase();
+        judulInput.value = `Review Perkembangan Teknologi: Analisis Mendalam Mengenai ${keywordJudul} Terkini`;
+      }
+
+      // Sinkronisasi Seluruh Workspace
+      syncCardPreview();
+      trackContentStats();
+      saveCurrentDraft();
+    }
+
+    // 3. CLOUD DATABASE ENGINE
     async function fetchLiveDatabase() {
       const tbody = document.getElementById('db-table-body');
       const countBadge = document.getElementById('db-count');
@@ -255,14 +265,13 @@
         const data = await res.json();
         
         if (data && data.length > 0) {
-          cacheDatabaseMemory = [...data].reverse(); // Data terbaru muncul paling atas
+          cacheDatabaseMemory = [...data].reverse();
           renderTableData(cacheDatabaseMemory);
         } else {
-          tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Koneksi berhasil, namun database kosong.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Koneksi berhasil, database kosong.</td></tr>`;
         }
       } catch (err) {
-        console.error(err);
-        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-400">Gagal Sinkronisasi. Periksa kembali jaringan internet atau konfigurasi doGet Google Sheets.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-400">Gagal Sinkronisasi Cloud.</td></tr>`;
       } finally {
         statusIndicator.innerText = "SYSTEM ACTIVE";
         statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-emerald-400";
@@ -270,61 +279,40 @@
       }
     }
 
-    // Merender baris tabel berdasarkan data array
     function renderTableData(dataArray) {
       const tbody = document.getElementById('db-table-body');
       const countBadge = document.getElementById('db-count');
-      
       tbody.innerHTML = "";
       countBadge.innerText = `${dataArray.length} Terdeteksi`;
 
       if (dataArray.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-600">Tidak ada artikel yang cocok dengan pencarian.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-600">Artikel tidak ditemukan.</td></tr>`;
         return;
       }
 
-      dataArray.forEach((item, index) => {
+      dataArray.forEach((item) => {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-900/60 transition text-slate-300";
-        
-        // Mengamankan string konten agar aman masuk ke attribute HTML JavaScript
-        const safeKonten = (item.konten || "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
+        const safeKonten = (item.konten || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
         tr.innerHTML = `
           <td class="p-3 text-slate-500 font-mono text-[11px] whitespace-nowrap">${item.tanggal || '-'}</td>
           <td class="p-3"><span class="text-[10px] bg-slate-900 border border-slate-800 text-slate-400 px-2 py-0.5 rounded">${item.kategori || 'Gadget'}</span></td>
           <td class="p-3 font-bold text-white max-w-xs truncate">${item.judul || 'Tanpa Judul'}</td>
           <td class="p-3 flex items-center justify-center gap-3">
-            <button type="button" onclick="loadArticleToWorkspace('${item.kategori}', '${item.sumber}', '${item.gambar}', '${item.judul.replace(/'/g, "\\'")}', '${safeKonten}')" class="bg-cyan-500/10 hover:bg-cyan-500 text-cyan-400 hover:text-slate-950 border border-cyan-500/20 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider transition cursor-pointer">
-              Edit 📝
-            </button>
-            <a href="${item.sumber}" target="_blank" class="bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition text-center min-w-[75px]">
-              ${item.sumber !== '#' ? 'Sumber 🔗' : 'No Link'}
-            </a>
+            <button type="button" onclick="loadArticleToWorkspace('${item.kategori}', '${item.sumber}', '${item.gambar}', '${item.judul.replace(/'/g, "\\'")}', '${safeKonten}')" class="bg-cyan-500/10 hover:bg-cyan-500 text-cyan-400 hover:text-slate-950 border border-cyan-500/20 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider transition cursor-pointer">Edit 📝</button>
+            <a href="${item.sumber}" target="_blank" class="bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition text-center min-w-[75px]">${item.sumber !== '#' ? 'Sumber 🔗' : 'No Link'}</a>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // MEMASUKKAN KEMBALI ARTIKEL LAMA DARI TABEL KE FORM ATAS
     function loadArticleToWorkspace(kategori, sumber, gambar, judul, kontenEscaped) {
-      if (confirm(`Apakah Anda yakin ingin memuat artikel:\n"${judul}" ke dalam Workspace kerja?\n\n*Catatan: Ketikan Anda yang ada di form saat ini akan ditimpa.`)) {
-        
-        // Kembalikan teks escape HTML ke karakter asli
+      if (confirm(`Muat kembali artikel "${judul}" ke workspace?`)) {
         let doc = new DOMParser().parseFromString(kontenEscaped, "text/html");
         let kontenHTML = doc.documentElement.textContent;
-
-        // Bersihkan tag pembungkus paragraf <p> agar rapi kembali di textarea
-        let cleanTextareaContent = kontenHTML
-          .replace(/<p[^>]*>/g, "")
-          .replace(/<\/p>/g, "\n")
-          .trim();
+        let cleanTextareaContent = kontenHTML.replace(/<p[^>]*>/g, "").replace(/<\/p>/g, "\n").trim();
 
         document.getElementById('kategori').value = kategori || "Gadget";
         document.getElementById('sumber').value = sumber === "#" ? "" : sumber;
@@ -332,126 +320,20 @@
         document.getElementById('judul').value = judul || "";
         document.getElementById('konten').value = cleanTextareaContent;
 
-        syncCardPreview();
-        trackContentStats();
-        saveCurrentDraft();
-        
-        document.getElementById('draft-status').innerText = "Data berhasil di-load! 📂";
+        syncCardPreview(); trackContentStats(); saveCurrentDraft();
         window.scrollTo({ top: document.getElementById('article-form').offsetTop - 80, behavior: 'smooth' });
       }
     }
 
-    // LIVE FILTERING SEARCH DATABASE BARIS TABEL
     function filterDatabaseTable() {
       const keyword = document.getElementById('db-search').value.toLowerCase();
       const filtered = cacheDatabaseMemory.filter(item => {
-        return (item.judul || "").toLowerCase().includes(keyword) || 
-               (item.kategori || "").toLowerCase().includes(keyword);
+        return (item.judul || "").toLowerCase().includes(keyword) || (item.kategori || "").toLowerCase().includes(keyword);
       });
       renderTableData(filtered);
     }
 
-    // 3. AI REWRITER ENGINE
-    function aiOptimizeSpelling() {
-      const area = document.getElementById('konten');
-      let text = area.value;
-      if (!text) return alert("Ketik isi materi berita terlebih dahulu!");
-
-      const dictionary = {
-        " yg ": " yang ", " dngn ": " dengan ", " dgn ": " dengan ", " ttg ": " tentang ",
-        " bnyk ": " banyak ", " hp ": " smartphone ", " sdh ": " sudah ", " blm ": " belum ",
-        " jd ": " jadi ", " tp ": " tetapi ", " dapet ": " mendapatkan ", " spek ": " spesifikasi ",
-        " murah ": " terjangkau ", " rilis ": " resmi meluncur ", " batre ": " baterai ",
-        " jg ": " juga ", " kmrn ": " kemarin ", " bwt ": " untuk ", " dlm ": " dalam "
-      };
-
-      Object.keys(dictionary).forEach(key => {
-        const regex = new RegExp(key, "gi");
-        text = text.replace(regex, dictionary[key]);
-      });
-
-      text = text.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-      area.value = text;
-      syncCardPreview();
-      trackContentStats();
-      saveCurrentDraft();
-    }
-
-    // 4. AI AUTO FORMAT SPECIFICATIONS
-    function aiFormatSpecs() {
-      const area = document.getElementById('konten');
-      let text = area.value;
-      if (!text) return alert("Ketik spesifikasi gadget terlebih dahulu!");
-
-      if (text.includes(",") && !text.includes("•")) {
-        let parts = text.split(",");
-        text = "Spesifikasi Lengkap:\n" + parts.map(p => `• ${p.trim()}`).join("\n");
-        area.value = text;
-        syncCardPreview();
-        trackContentStats();
-        saveCurrentDraft();
-      }
-    }
-
-    // 5. AI HEADLINE GENERATOR
-    function aiGenerateHeadlines() {
-      const text = document.getElementById('konten').value;
-      if (!text) return alert("Tulis konten berita dulu agar AI paham topiknya!");
-
-      const words = text.toLowerCase();
-      let gadgetBrand = "Smartphone Terbaru";
-      
-      if (words.includes("xiaomi")) gadgetBrand = "Xiaomi";
-      else if (words.includes("samsung")) gadgetBrand = "Samsung";
-      else if (words.includes("iphone") || words.includes("apple")) gadgetBrand = "iPhone";
-      else if (words.includes("vivo")) gadgetBrand = "Vivo";
-      else if (words.includes("oppo")) gadgetBrand = "Oppo";
-
-      let coreFeature = "Bawa Spesifikasi Gahar";
-      if (words.includes("baterai") || words.includes("mah")) coreFeature = "Gendong Baterai Jumbo";
-      if (words.includes("leica") || words.includes("kamera") || words.includes("mp")) coreFeature = "Sektor Kamera Upgrade Total";
-      if (words.includes("chipset") || words.includes("snapdragon")) coreFeature = "Dapur Pacu Makin Kencang";
-
-      const suggestions = [
-        `🔥 Gebrakan Baru! ${gadgetBrand} Resmi Meluncur, ${coreFeature}!`,
-        `Siap Gandeng Teknologi Premium, ${gadgetBrand} Akhirnya Hadir di Indonesia`,
-        `Menang Banyak? Ternyata Ini Keunggulan Utama ${gadgetBrand} yang Baru Saja Rilis!`
-      ];
-
-      const box = document.getElementById('ai-headline-box');
-      const container = document.getElementById('headline-suggestions');
-      container.innerHTML = "";
-
-      suggestions.forEach(title => {
-        const p = document.createElement('p');
-        p.className = "bg-slate-900 p-2 rounded border border-slate-800 hover:border-cyan-500 cursor-pointer transition font-medium text-white";
-        p.innerText = title;
-        p.onclick = function() {
-          document.getElementById('judul').value = title;
-          syncCardPreview();
-          saveCurrentDraft();
-          box.classList.add('hidden');
-        };
-        container.appendChild(p);
-      });
-
-      box.classList.remove('hidden');
-    }
-
-    // 6. CLEAN INSTAGRAM CAPTION
-    function cleanInstagramCaption() {
-      const area = document.getElementById('konten');
-      let text = area.value;
-      if (!text) return;
-      text = text.replace(/#\w+/g, '');
-      text = text.replace(/\n\s*\n+/g, '\n\n').trim();
-      area.value = text;
-      syncCardPreview();
-      trackContentStats();
-      saveCurrentDraft();
-    }
-
-    // 7. LIVE CARD PREVIEW ENGINE
+    // 4. PREVIEW & AUXILIARY ENGINE
     function syncCardPreview() {
       const fallback = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
       const kat = document.getElementById('kategori').value;
@@ -466,17 +348,10 @@
       const targetImg = imgUrl ? imgUrl : fallback;
       const blurImg = document.getElementById('card-preview-blur');
       const normImg = document.getElementById('card-preview-img');
-
-      blurImg.src = targetImg;
-      normImg.src = targetImg;
-
-      normImg.onerror = function() {
-        blurImg.src = fallback;
-        normImg.src = fallback;
-      };
+      blurImg.src = targetImg; normImg.src = targetImg;
+      normImg.onerror = function() { blurImg.src = fallback; normImg.src = fallback; };
     }
 
-    // 8. AUTO SAVING DRAFT TO SYSTEM LOCALSTORAGE
     window.onload = function() {
       const savedDraft = localStorage.getItem(DRAFT_KEY);
       if (savedDraft) {
@@ -487,11 +362,9 @@
           document.getElementById('gambar').value = data.gambar || "";
           document.getElementById('judul').value = data.judul || "";
           document.getElementById('konten').value = data.konten || "";
-        } catch(e) { console.error(e); }
+        } catch(e) {}
       }
-      syncCardPreview();
-      trackContentStats();
-
+      syncCardPreview(); trackContentStats();
       ['kategori', 'sumber', 'gambar', 'judul', 'konten'].forEach(id => {
         document.getElementById(id).addEventListener('input', saveCurrentDraft);
       });
@@ -511,14 +384,13 @@
 
     function clearDraft() {
       if (confirm("Kosongkan draf kerja?")) {
-        localStorage.removeItem(DRAFT_KEY);
-        document.getElementById('article-form').reset();
-        syncCardPreview();
-        trackContentStats();
+        localStorage.removeItem(DRAFT_KEY); document.getElementById('article-form').reset();
+        syncCardPreview(); trackContentStats();
         document.getElementById('draft-status').innerText = "Form kosong";
       }
     }
 
+    // Hitung statistik karakter & durasi membaca secara realtime
     function trackContentStats() {
       const text = document.getElementById('konten').value || "";
       document.getElementById('char-count').innerText = text.length;
@@ -527,7 +399,7 @@
       document.getElementById('read-time').innerText = text.length > 0 ? `${readTime}m` : "0m";
     }
 
-    // 9. TRANSMIT NEW DATA TO GOOGLE SHEETS
+    // 5. TRANSMISSION SUBMISSION
     async function submitArticle(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submit-btn');
@@ -568,11 +440,7 @@
         alert(`SUKSES! \nArtikel "${judul}" berhasil disiarkan.`);
         localStorage.removeItem(DRAFT_KEY);
         document.getElementById('article-form').reset();
-        syncCardPreview();
-        trackContentStats();
-        
-        // Memuat ulang tabel database monitor secara live setelah berhasil input
-        fetchLiveDatabase();
+        syncCardPreview(); trackContentStats(); fetchLiveDatabase();
       } catch (error) {
         alert(`Error: ${error.message}`);
       } finally {
