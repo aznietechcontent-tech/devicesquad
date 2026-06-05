@@ -313,6 +313,33 @@
     }
 
     window.onload = loadArticles;
+
+   // Fungsi memunculkan gambar langsung di halaman admin saat link ditempel
+    function previewImage() {
+      const url = document.getElementById('gambar').value;
+      const container = document.getElementById('image-preview-container');
+      const img = document.getElementById('image-preview');
+      
+      if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+        img.src = url;
+        container.classList.remove('hidden');
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
+    // Ubah logika pengambilan data konten di dalam fungsi submitForm kamu menjadi seperti ini:
+    // (Cari baris let konten = ... di dalam kode lamamu, lalu ganti dengan ini)
+    const kontenMentah = document.getElementById('konten').value;
+    
+    // Mengubah setiap tekanan tombol 'Enter' menjadi paragraf HTML (<p>) otomatis
+    const kontenProses = kontenMentah
+      .split('\n')
+      .filter(paragraf => paragraf.trim() !== '')
+      .map(paragraf => `<p class="mb-4 leading-relaxed text-slate-300">${paragraf}</p>`)
+      .join('');
+
+    // Jalankan pengiriman data seperti biasa dengan mengirimkan variabel 'kontenProses' ke Google Sheets
   </script>
 </body>
 </html>
