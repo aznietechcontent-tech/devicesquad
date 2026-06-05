@@ -3,258 +3,301 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Admin CMS - TechPost</title>
+  <title>Device Squad - Professional Publisher Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-12">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
 
-  <nav class="bg-slate-800 border-b border-slate-700 p-4 shadow-md sticky top-0 z-40">
-    <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-xl font-bold text-cyan-400">🛠️ TechPost CMS Dashboard</h1>
-      <a href="index.html" class="text-xs bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition">Lihat Web Utama</a>
+  <!-- NAVIGATION BAR -->
+  <nav class="bg-slate-900 border-b border-slate-800/80 p-4 shadow-xl sticky top-0 z-50">
+    <div class="container mx-auto max-w-5xl flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <img src="devicesquad.jpeg" alt="Logo" class="h-8 w-8 rounded-lg object-cover border border-slate-700/40">
+        <div>
+          <h1 class="text-sm font-black tracking-tight text-white uppercase leading-none">Device <span class="text-cyan-400">Squad</span></h1>
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Publisher Workspace v2.0</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+        <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span id="system-status" class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ready</span>
+      </div>
     </div>
   </nav>
 
-  <main class="container mx-auto px-4 my-8 max-w-4xl">
+  <!-- MAIN WORKSPACE -->
+  <main class="container mx-auto px-4 my-8 flex-grow max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-6">
     
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl mb-8">
-      <h2 id="form-title" class="text-2xl font-extrabold text-white mb-6">Tulis Artikel Teknologi Baru</h2>
-      
-      <form id="post-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Password Admin</label>
-          <input type="password" id="password" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="Masukkan password keamanan">
+    <!-- LEFT SIDEBAR: ANALYTICS & UTILITIES -->
+    <div class="space-y-6 lg:col-span-1">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-4">Live Status & Analytics</h3>
+        
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <p class="text-[10px] font-bold text-slate-500 uppercase">Karakter Isi</p>
+            <p id="char-count" class="text-lg font-black text-white mt-1">0</p>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+            <p class="text-[10px] font-bold text-slate-500 uppercase">Estimasi Baca</p>
+            <p id="read-time" class="text-lg font-black text-cyan-400 mt-1">0m</p>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Judul Berita</label>
-            <input type="text" id="judul" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="Contoh: Chip Kuantum Mulai Diproduksi Massal">
+        <div class="mt-4 pt-4 border-t border-slate-800/60 space-y-2">
+          <div class="flex justify-between text-xs text-slate-400">
+            <span>Status Draf:</span>
+            <span id="draft-status" class="text-emerald-400 font-medium">Tersimpan otomatis</span>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Kategori</label>
-            <select id="kategori" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition">
-              <option value="Gadget">Gadget</option>
+          <button onclick="clearDraft()" class="w-full mt-2 text-center text-[10px] font-bold uppercase tracking-wider text-red-400 hover:text-red-300 transition py-2 bg-red-950/20 border border-red-900/30 rounded-lg cursor-pointer">
+            Kosongkan Formulir Draf 🗑️
+          </button>
+        </div>
+      </div>
+
+      <!-- IMAGE LIVE PREVIEW BOX -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-3">Cover Aspect Ratio Check</h3>
+        <div id="preview-placeholder" class="flex-grow flex flex-col items-center justify-center p-8 border border-dashed border-slate-800 rounded-xl bg-slate-950/40 text-center text-slate-600 min-h-[180px]">
+          <span class="text-2xl mb-2">📸</span>
+          <p class="text-xs">Tempel direct link gambar untuk memvalidasi posisi rasio 4:5 Instagram</p>
+        </div>
+        <div id="image-preview-container" class="hidden relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center p-2 min-h-[220px]">
+          <img id="image-preview" src="" class="max-w-full max-h-[240px] object-contain rounded-lg shadow-2xl z-10">
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CONTENT: PROFESSIONAL CONTENT CREATOR FORM -->
+    <div class="lg:col-span-2">
+      <form id="article-form" onsubmit="submitArticle(event)" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Kolom Kategori -->
+          <div class="space-y-1.5 md:col-span-1">
+            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kategori Berita</label>
+            <select id="kategori" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition cursor-pointer">
+              <option value="Gadget" selected>Gadget</option>
               <option value="Software">Software</option>
               <option value="AI & Future">AI & Future</option>
               <option value="Cybersecurity">Cybersecurity</option>
               <option value="Game">Game</option>
             </select>
           </div>
+
+          <!-- Kolom Sumber Berita Rujukan -->
+          <div class="space-y-1.5 md:col-span-2">
+            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Link Sumber Referensi (Opsional)</label>
+            <input type="url" id="sumber" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-700" placeholder="https://www.gsmarena.com/xyz">
+          </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">URL Gambar Sampul</label>
-          <input type="url" id="gambar" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="https://images.unsplash.com/...">
+        <!-- Kolom URL Gambar Pintar -->
+        <div class="space-y-1.5">
+          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">URL Gambar Utama</label>
+          <input type="url" id="gambar" oninput="handleImageInput()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-cyan-400 focus:outline-none focus:border-cyan-500 transition font-mono placeholder-slate-700" placeholder="Masukkan link gambar ImgBB..." required>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Isi Konten Berita</label>
-          <textarea id="konten" rows="6" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition" placeholder="Tulis detail artikel di sini..."></textarea>
+        <!-- Kolom Judul Utama -->
+        <div class="space-y-1.5">
+          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Judul Artikel Berita</label>
+          <input type="text" id="judul" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm font-bold text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-600" placeholder="Contoh: Xiaomi 17 Ultra Resmi Meluncur, Gendong Kamera Leica Terbaru!" required>
         </div>
 
-        <div class="flex gap-3">
-          <button type="submit" id="submit-btn" class="flex-grow bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3.5 rounded-xl cursor-pointer shadow-lg transition">
-            Publish Artikel 🚀
+        <!-- Kolom Isi Konten Berita -->
+        <div class="space-y-1.5">
+          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Materi / Isi Konten Utama</label>
+          <textarea id="konten" oninput="trackContentStats()" rows="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition leading-relaxed" placeholder="Tulis beritanya di sini. Cukup gunakan 'Enter' di keyboard untuk memisahkan setiap paragraf baru..." required></textarea>
+        </div>
+
+        <!-- Tombol Aksi Kerja -->
+        <div class="pt-2">
+          <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-cyan-500/10 transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Publish Ke Portal Live 🚀</span>
           </button>
-          <button type="button" id="cancel-btn" onclick="resetFormState()" class="hidden bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold px-6 rounded-xl transition">
-            Batal
-          </button>
         </div>
+
       </form>
-    </div>
-
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
-      <h2 class="text-xl font-bold text-white mb-4">Kelola Postingan Berita</h2>
-      
-      <div id="loading-list" class="text-slate-400 text-sm py-4 animate-pulse">Memuat daftar artikel...</div>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse hidden" id="articles-table">
-          <thead>
-            <tr class="border-b border-slate-700 text-slate-400 text-xs uppercase tracking-wider">
-              <th class="py-3 px-4">Judul</th>
-              <th class="py-3 px-4">Kategori</th>
-              <th class="py-3 px-4">Tanggal</th>
-              <th class="py-3 px-4 text-right">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="table-body" class="text-sm divide-y divide-slate-700/50">
-            </tbody>
-        </table>
-      </div>
-      <!-- Kolom URL Gambar + Pratinjau -->
-      <div class="space-y-2">
-        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">URL Gambar Artikel (Direct Link .jpg/.png)</label>
-        <input type="url" id="gambar" oninput="previewImage()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition shadow-inner" placeholder="https://i.ibb.co/xxxx/gambar.jpg" required>
-        
-        <!-- Box Pratinjau Gambar Otomatis -->
-        <div id="image-preview-container" class="hidden mt-3 p-2 bg-slate-900 border border-slate-750 rounded-xl flex justify-center overflow-hidden max-h-60 bg-slate-950">
-          <img id="image-preview" src="" class="max-w-full max-h-56 object-contain rounded-lg">
-        </div>
-      </div>
-
-      <!-- Kolom Isi Konten Berita -->
-      <div class="space-y-2">
-        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Isi Konten Berita</label>
-        <textarea id="konten" rows="8" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition shadow-inner leading-relaxed" placeholder="Tulis spesifikasi lengkap, performa, dan harga di sini. Cukup tekan Enter untuk membuat paragraf baru..." required></textarea>
-      </div>
     </div>
 
   </main>
 
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 border-t border-slate-900 py-4 text-center text-[10px] text-slate-600 tracking-wider">
+    <p>&copy; 2026 Device Squad Control Hub. Authorized Publisher Only.</p>
+  </footer>
+
+  <!-- CORE DASHBOARD LOGIC ENGINE -->
   <script>
-    // ⚠️ PASTIKAN TEMPELKAN URL WEB APP (/exec) YANG BARU DI SINI
+    // ⚠️ PASTIKAN URL WEB APP MACRO MILIKMU SUDAH TEPAT
     const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
-    
-    let localArticles = [];
-    let currentAction = "add"; // Status form: "add" atau "edit"
-    let targetArticleId = null; // Menyimpan ID saat mengedit
 
-    // 1. Ambil data saat halaman dibuka
-    async function fetchArticles() {
-      document.getElementById('loading-list').classList.remove('hidden');
-      document.getElementById('articles-table').classList.add('hidden');
+    // Kunci Penyimpanan Otomatis (Auto-Save)
+    const DRAFT_KEY = "device_squad_draft_content";
+
+    // 1. Sistem Inisialisasi & Pengisian Draf Otomatis Saat Halaman Dibuka
+    window.onload = function() {
+      const savedDraft = localStorage.getItem(DRAFT_KEY);
+      if (savedDraft) {
+        try {
+          const data = JSON.parse(savedDraft);
+          document.getElementById('kategori').value = data.kategori || "Gadget";
+          document.getElementById('sumber').value = data.sumber || "";
+          document.getElementById('gambar').value = data.gambar || "";
+          document.getElementById('judul').value = data.judul || "";
+          document.getElementById('konten').value = data.konten || "";
+          
+          handleImageInput();
+          trackContentStats();
+        } catch(e) { console.error("Gagal menyusun draf", e); }
+      }
       
-      try {
-        const response = await fetch(API_URL);
-        localArticles = await response.json();
-        
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = '';
+      // Pasang fungsi auto-save terintegrasi ke seluruh kolom input
+      const inputs = ['kategori', 'sumber', 'gambar', 'judul', 'konten'];
+      inputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', saveCurrentDraft);
+      });
+    };
 
-        localArticles.forEach(art => {
-          tbody.innerHTML += `
-            <tr class="hover:bg-slate-750/40 transition">
-              <td class="py-3 px-4 font-semibold text-white max-w-xs truncate">${art.judul}</td>
-              <td class="py-3 px-4"><span class="text-xs bg-slate-900 px-2 py-1 rounded text-cyan-400 border border-slate-700">${art.kategori}</span></td>
-              <td class="py-3 px-4 text-slate-400 text-xs">${art.tanggal}</td>
-              <td class="py-3 px-4 text-right space-x-2 whitespace-nowrap">
-                <button onclick="prepareEdit(${art.id})" class="text-xs font-bold text-amber-400 hover:text-amber-300 transition cursor-pointer">Edit</button>
-                <button onclick="deleteArticle(${art.id})" class="text-xs font-bold text-red-400 hover:text-red-300 transition cursor-pointer">Hapus</button>
-              </td>
-            </tr>
-          `;
-        });
+    function saveCurrentDraft() {
+      const draftObj = {
+        kategori: document.getElementById('kategori').value,
+        sumber: document.getElementById('sumber').value,
+        gambar: document.getElementById('gambar').value,
+        judul: document.getElementById('judul').value,
+        konten: document.getElementById('konten').value
+      };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draftObj));
+      document.getElementById('draft-status').innerText = "Draf otomatis diperbarui";
+    }
 
-        document.getElementById('loading-list').classList.add('hidden');
-        document.getElementById('articles-table').classList.remove('hidden');
-      } catch (err) {
-        document.getElementById('loading-list').innerText = "Gagal memuat daftar postingan.";
+    function clearDraft() {
+      if (confirm("Apakah kamu yakin ingin membersihkan dan mengosongkan seluruh isi form ini?")) {
+        localStorage.removeItem(DRAFT_KEY);
+        document.getElementById('article-form').reset();
+        handleImageInput();
+        trackContentStats();
+        document.getElementById('draft-status').innerText = "Form dibersihkan";
       }
     }
 
-    // 2. Kirim data form (Tambah atau Edit)
-    async function handleFormSubmit(e) {
+    // 2. Mesin Cerdas Pendeteksi & Pembersih Link ImgBB Secara Otomatis
+    function handleImageInput() {
+      let urlInput = document.getElementById('gambar').value.trim();
+      const placeholder = document.getElementById('preview-placeholder');
+      const container = document.getElementById('image-preview-container');
+      const img = document.getElementById('image-preview');
+
+      if (!urlInput) {
+        placeholder.classList.remove('hidden');
+        container.classList.add('hidden');
+        return;
+      }
+
+      // 🔍 JURUS AUTO-CORRECT: Jika pengguna menempelkan link viewer web ImgBB biasa
+      // Contoh: https://ibb.co/68vD18L -> Kita deteksi dan ingatkan via log atau kita bersihkan langsung
+      if (urlInput.includes("ibb.co/") && !urlInput.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+        document.getElementById('draft-status').innerText = "⚠️ Gunakan 'Tautan Langsung' (.jpg) dari ImgBB!";
+      }
+
+      img.src = urlInput;
+      placeholder.classList.add('hidden');
+      container.classList.remove('hidden');
+
+      // Proteksi jika tautan mati/gagal dirender
+      img.onerror = function() {
+        placeholder.classList.remove('hidden');
+        container.classList.add('hidden');
+      };
+    }
+
+    // 3. Penghitung Statistik Karakter & Estimasi Waktu Baca Buku Berita
+    function trackContentStats() {
+      const text = document.getElementById('konten').value || "";
+      document.getElementById('char-count').innerText = text.length;
+
+      // Asumsi kecepatan baca rata-rata: 180 kata per menit
+      const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+      const readTime = Math.max(1, Math.ceil(words / 180));
+      document.getElementById('read-time').innerText = text.length > 0 ? `${readTime}m` : "0m";
+    }
+
+    // 4. Sistem Pengiriman Data (Publishing Engine)
+    async function submitArticle(e) {
       e.preventDefault();
+      
       const submitBtn = document.getElementById('submit-btn');
-      const originalText = submitBtn.innerText;
+      const statusIndicator = document.getElementById('system-status');
+      
+      // Ambil data form
+      const kategori = document.getElementById('kategori').value;
+      const sumber = document.getElementById('sumber').value.trim() || "#";
+      const gambar = document.getElementById('gambar').value.trim();
+      const judul = document.getElementById('judul').value.trim();
+      const kontenMentah = document.getElementById('konten').value;
 
+      // ⚙️ OTOMATISASI PARAGRAF: Mengubah enter baris menjadi kode paragraf <p> dinamis
+      const kontenProses = kontenMentah
+        .split('\n')
+        .map(p => p.trim())
+        .filter(p => p.length > 0)
+        .map(p => `<p class="mb-4 leading-relaxed text-slate-300 text-sm">${p}</p>`)
+        .join('');
+
+      // Mengambil Tanggal Otomatis Hari Ini secara Real-time (Format: YYYY-MM-DD)
+      const hariIni = new Date();
+      const tanggal = hariIni.toISOString().split('T')[0];
+
+      // Kunci Tombol (Mencegah pengiriman ganda akibat spam-klik)
       submitBtn.disabled = true;
-      submitBtn.innerText = "Sedang memproses...";
+      submitBtn.className = "w-full bg-slate-800 border border-slate-700 text-slate-500 text-xs font-black uppercase tracking-widest py-4 rounded-xl cursor-not-allowed flex items-center justify-center gap-2";
+      submitBtn.innerHTML = `
+        <div class="animate-spin rounded-full h-4 w-4 border-2 border-cyan-400 border-t-transparent"></div>
+        <span>Memproses Transmisi Berita...</span>
+      `;
+      statusIndicator.innerText = "TRANSMITTING DATA";
+      statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-amber-400";
 
+      // Kompilasi Paket Payload Data JSON
       const payload = {
-        action: currentAction,
-        id: targetArticleId,
-        password: document.getElementById('password').value,
-        judul: document.getElementById('judul').value,
-        kategori: document.getElementById('kategori').value,
-        gambar: document.getElementById('gambar').value,
-        konten: document.getElementById('konten').value
+        kategori: kategori,
+        sumber: sumber,
+        gambar: gambar,
+        judul: judul,
+        konten: kontenProses,
+        tanggal: tanggal
       };
 
       try {
         const response = await fetch(API_URL, {
-          method: 'POST',
+          method: "POST",
+          mode: "no-cors", // Sesuai arsitektur Google Apps Script Macro bawaan
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
-        const result = await response.json();
 
-        if (result.status === "success") {
-          alert("🎉 Sukses: " + result.message);
-          resetFormState();
-          fetchArticles(); // Refresh tabel data
-        } else {
-          alert("❌ Gagal: " + result.message);
-          submitBtn.disabled = false;
-          submitBtn.innerText = originalText;
-        }
-      } catch (err) {
-        alert("❌ Terjadi masalah koneksi ke API.");
+        // Tampilkan Sukses Berita Berhasil Dirilis
+        alert(`BERHASIL! \nArtikel "${judul}" telah sukses diunggah ke database Device Squad.`);
+        
+        // Bersihkan draf penyimpanan internal lokal
+        localStorage.removeItem(DRAFT_KEY);
+        document.getElementById('article-form').reset();
+        handleImageInput();
+        trackContentStats();
+
+        statusIndicator.innerText = "READY";
+        statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-slate-400";
+
+      } catch (error) {
+        console.error("Gagal mengirim postingan:", error);
+        alert(`Gagal mengirim data! Terjadi error koneksi: ${error.message}`);
+      } finally {
+        // Kembalikan Tombol ke Sifat Normal
         submitBtn.disabled = false;
-        submitBtn.innerText = originalText;
+        submitBtn.className = "w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-widest py-4 rounded-xl shadow-lg shadow-cyan-500/10 transition flex items-center justify-center gap-2 cursor-pointer";
+        submitBtn.innerHTML = `<span>Publish Ke Portal Live 🚀</span>`;
       }
     }
-
-    // 3. Masuk ke Mode Edit & Isi Form
-    function prepareEdit(id) {
-      const art = localArticles.find(a => a.id === id);
-      if (!art) return;
-
-      currentAction = "edit";
-      targetArticleId = id;
-
-      // Isi elemen formulir dengan data lama
-      document.getElementById('judul').value = art.judul;
-      document.getElementById('kategori').value = art.kategori;
-      document.getElementById('gambar').value = art.gambar;
-      document.getElementById('konten').value = art.konten;
-
-      // Ubah UI Form
-      document.getElementById('form-title').innerText = "✏️ Edit Artikel (ID: " + id + ")";
-      document.getElementById('submit-btn').innerText = "Simpan Perubahan 💾";
-      document.getElementById('cancel-btn').classList.remove('hidden');
-      
-      // Scroll otomatis ke atas (ke arah form)
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // 4. Hapus Artikel
-    async function deleteArticle(id) {
-      const konfirmasi = confirm("Apakah kamu yakin ingin menghapus artikel ini secara permanen?");
-      if (!konfirmasi) return;
-
-      const passwordPrompt = document.getElementById('password').value;
-      if (!passwordPrompt) {
-        alert("Silakan isi kolom 'Password Admin' di form atas terlebih dahulu sebagai verifikasi hapus!");
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
-
-      const payload = {
-        action: "delete",
-        id: id,
-        password: passwordPrompt
-      };
-
-      try {
-        const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
-        const result = await response.json();
-
-        if (result.status === "success") {
-          alert("🗑️ " + result.message);
-          fetchArticles();
-        } else {
-          alert("❌ Gagal menghapus: " + result.message);
-        }
-      } catch (err) {
-        alert("❌ Gagal menghubungi server.");
-      }
-    }
-
-    // 5. Reset status form kembali ke semula
-    function resetFormState() {
-      currentAction = "add";
-      targetArticleId = null;
-      document.getElementById('post-form').reset();
-      document.getElementById('form-title').innerText = "Tulis Artikel Teknologi Baru";
-      document.getElementById('submit-btn').innerText = "Publish Artikel 🚀";
-      document.getElementById('submit-btn').disabled = false;
-      document.getElementById('cancel-btn').classList.add('hidden');
-    }
-
-    // Jalankan load data saat halaman admin dibuka
-    window.onload = fetchArticles;
   </script>
 </body>
 </html>
