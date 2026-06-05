@@ -181,7 +181,6 @@
           <p class="text-[10px] text-slate-500">Cari, filter, dan load data langsung dari cloud server utama</p>
         </div>
         
-        <!-- FITUR BARU: MESIN PENCARI REAL-TIME -->
         <div class="flex flex-wrap items-center gap-2">
           <input type="text" id="db-search" oninput="filterDatabaseTable()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-[11px] text-white focus:outline-none focus:border-cyan-500 placeholder-slate-700 min-w-[200px]" placeholder="Cari judul / kategori artikel...">
           <span id="db-count" class="text-[10px] bg-slate-950 border border-slate-800 px-3 py-2 rounded-xl text-cyan-400 font-bold whitespace-nowrap">0 Terdeteksi</span>
@@ -201,7 +200,7 @@
           </thead>
           <tbody id="db-table-body" class="divide-y divide-slate-900 text-slate-300">
             <tr>
-              <td colspan="4" class="p-4 text-center text-slate-600 font-medium">Silakan klik tombol "Sinkronisasi Cloud Live" di atas untuk menyalakan panel kontrol...</td>
+              <td colspan="4" class="p-4 text-center text-slate-600 font-medium">Menunggu autentikasi masuk keamanan sistem...</td>
             </tr>
           </tbody>
         </table>
@@ -222,11 +221,17 @@
     
     let cacheDatabaseMemory = []; // Menyimpan salinan data server di memori lokal browser
 
-    // 1. GATEKEEPER SECURITY
+    // 1. GATEKEEPER SECURITY & AUTO-LOAD
     (function checkSecurity() {
       const inputPass = prompt("🔑 Device Squad Protection Layer:\nMasukkan Password/PIN Akses Publisher Admin:");
       if (inputPass === SECURITY_PIN) {
         document.getElementById('admin-body').classList.remove('hidden');
+        
+        // OTOMATIS AMBIL DATA BEGITU LOGIN BERHASIL (Mencegah Kebingungan)
+        setTimeout(() => {
+          fetchLiveDatabase();
+        }, 500);
+
       } else {
         alert("❌ Akses Ditolak!");
         window.location.href = "index.html";
@@ -250,7 +255,7 @@
         const data = await res.json();
         
         if (data && data.length > 0) {
-          cacheDatabaseMemory = [...data].reverse(); // Simpan ke ram lokal dan balik data terbaru ke atas
+          cacheDatabaseMemory = [...data].reverse(); // Data terbaru muncul paling atas
           renderTableData(cacheDatabaseMemory);
         } else {
           tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Koneksi berhasil, namun database kosong.</td></tr>`;
@@ -282,15 +287,20 @@
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-900/60 transition text-slate-300";
         
-        // Escape content string agar aman dimasukkan ke attribute javascript
-        const safeKonten = (item.konten || "").replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        // Mengamankan string konten agar aman masuk ke attribute HTML JavaScript
+        const safeKonten = (item.konten || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
 
         tr.innerHTML = `
           <td class="p-3 text-slate-500 font-mono text-[11px] whitespace-nowrap">${item.tanggal || '-'}</td>
           <td class="p-3"><span class="text-[10px] bg-slate-900 border border-slate-800 text-slate-400 px-2 py-0.5 rounded">${item.kategori || 'Gadget'}</span></td>
           <td class="p-3 font-bold text-white max-w-xs truncate">${item.judul || 'Tanpa Judul'}</td>
           <td class="p-3 flex items-center justify-center gap-3">
-            <button type="button" onclick="loadArticleToWorkspace('${item.kategori}', '${item.sumber}', '${item.gambar}', '${item.judul}', '${safeKonten}')" class="bg-cyan-500/10 hover:bg-cyan-500 text-cyan-400 hover:text-slate-950 border border-cyan-500/20 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider transition cursor-pointer">
+            <button type="button" onclick="loadArticleToWorkspace('${item.kategori}', '${item.sumber}', '${item.gambar}', '${item.judul.replace(/'/g, "\\'")}', '${safeKonten}')" class="bg-cyan-500/10 hover:bg-cyan-500 text-cyan-400 hover:text-slate-950 border border-cyan-500/20 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider transition cursor-pointer">
               Edit 📝
             </button>
             <a href="${item.sumber}" target="_blank" class="bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition text-center min-w-[75px]">
@@ -302,11 +312,15 @@
       });
     }
 
-    // FITUR REVOLUSIONER: COPY DATA DARI TABEL BAWAH LANGSUNG INJEKSI KE FORM ATAS
-    function loadArticleToWorkspace(kategori, sumber, gambar, judul, kontenHTML) {
+    // MEMASUKKAN KEMBALI ARTIKEL LAMA DARI TABEL KE FORM ATAS
+    function loadArticleToWorkspace(kategori, sumber, gambar, judul, kontenEscaped) {
       if (confirm(`Apakah Anda yakin ingin memuat artikel:\n"${judul}" ke dalam Workspace kerja?\n\n*Catatan: Ketikan Anda yang ada di form saat ini akan ditimpa.`)) {
         
-        // Bersihkan tag-tag HTML <p class="..."> dari database agar kembali jadi teks biasa di textarea
+        // Kembalikan teks escape HTML ke karakter asli
+        let doc = new DOMParser().parseFromString(kontenEscaped, "text/html");
+        let kontenHTML = doc.documentElement.textContent;
+
+        // Bersihkan tag pembungkus paragraf <p> agar rapi kembali di textarea
         let cleanTextareaContent = kontenHTML
           .replace(/<p[^>]*>/g, "")
           .replace(/<\/p>/g, "\n")
@@ -327,7 +341,7 @@
       }
     }
 
-    // FITUR REVOLUSIONER: LIVE FILTERING DATABASE TANPA REFRESH
+    // LIVE FILTERING SEARCH DATABASE BARIS TABEL
     function filterDatabaseTable() {
       const keyword = document.getElementById('db-search').value.toLowerCase();
       const filtered = cacheDatabaseMemory.filter(item => {
@@ -437,7 +451,7 @@
       saveCurrentDraft();
     }
 
-    // 7. LIVE CARD PREVIEW
+    // 7. LIVE CARD PREVIEW ENGINE
     function syncCardPreview() {
       const fallback = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
       const kat = document.getElementById('kategori').value;
@@ -462,7 +476,7 @@
       };
     }
 
-    // 8. AUTO WORKSPACE STATE & DRAFT
+    // 8. AUTO SAVING DRAFT TO SYSTEM LOCALSTORAGE
     window.onload = function() {
       const savedDraft = localStorage.getItem(DRAFT_KEY);
       if (savedDraft) {
@@ -513,7 +527,7 @@
       document.getElementById('read-time').innerText = text.length > 0 ? `${readTime}m` : "0m";
     }
 
-    // 9. DATA TRANSMISSION ENGINE
+    // 9. TRANSMIT NEW DATA TO GOOGLE SHEETS
     async function submitArticle(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submit-btn');
@@ -557,6 +571,7 @@
         syncCardPreview();
         trackContentStats();
         
+        // Memuat ulang tabel database monitor secara live setelah berhasil input
         fetchLiveDatabase();
       } catch (error) {
         alert(`Error: ${error.message}`);
