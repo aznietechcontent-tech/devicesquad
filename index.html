@@ -31,13 +31,12 @@
     <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-5 shadow-xl mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
       <!-- Navigasi Filter Kategori -->
       <div id="category-filters" class="flex flex-wrap gap-2 w-full md:w-auto">
-        <button id="btn-semua" onclick="filterCategory('semua')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-slate-700 text-slate-300 hover:bg-slate-600">
+        <button id="btn-semua" onclick="filterCategory('semua')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-cyan-500 text-slate-900 shadow-md shadow-cyan-500/20">
           Semua
         </button>
-        <button id="btn-Gadget" onclick="filterCategory('Gadget')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-cyan-500 text-slate-900 shadow-md shadow-cyan-500/20">
+        <button id="btn-Gadget" onclick="filterCategory('Gadget')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-slate-700 text-slate-300 hover:bg-slate-600">
           Gadget
         </button>
-        <!-- Kategori lain dibuat redup/disabled agar fokus ke Gadget terlebih dahulu -->
         <button id="btn-Software" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
           Software
         </button>
@@ -94,14 +93,13 @@
     <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl flex flex-col" onclick="event.stopPropagation()">
       
       <!-- Modal Header Gambar -->
-      <!-- KODE BARU -->
-<div class="relative bg-slate-950 flex items-center justify-center overflow-hidden max-h-[50vh]">
-  <!-- Background blur di belakang gambar agar estetik -->
-  <img id="modal-img-blur" class="absolute inset-0 w-full h-full object-cover opacity-25 blur-lg" src="">
-  <!-- Gambar utama 4:5 yang berdiri tegak tanpa terpotong -->
-  <img id="modal-img" class="max-w-full max-h-[50vh] object-contain relative z-10" src="" alt="Cover">
-  <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-950/80 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer z-20">✕</button>
-</div>
+      <div class="relative bg-slate-950 flex items-center justify-center overflow-hidden max-h-[50vh]">
+        <!-- Background blur di belakang gambar agar estetik -->
+        <img id="modal-img-blur" class="absolute inset-0 w-full h-full object-cover opacity-25 blur-lg" src="">
+        <!-- Gambar utama 4:5 yang berdiri tegak tanpa terpotong -->
+        <img id="modal-img" class="max-w-full max-h-[50vh] object-contain relative z-10" src="" alt="Cover">
+        <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-950/80 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer z-20">✕</button>
+      </div>
 
       <!-- Modal Konten Teks -->
       <div class="p-6 overflow-y-auto">
@@ -132,11 +130,10 @@
 
   <!-- CORE JAVASCRIPT ENGINE -->
   <script>
-    // ⚠️ PASTIKAN URL WEB APP MACRO SESUAI SETELAH DEPLOY ULANG KODE.GS
     const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     
     let globalArticles = [];      
-    let currentCategory = "semua"; // Setel beranda awal langsung memfilter Gadget
+    let currentCategory = "semua"; 
     let searchQuery = "";         
     
     const ITEMS_PER_PAGE = 6;      
@@ -178,26 +175,55 @@
 
     // 2. Pemrosesan Filter, Search, dan Batasan Tampilan (Pagination)
     function applyFilterAndSearch() {
+      const gridElement = document.getElementById('articles-grid');
+      const loadMoreContainer = document.getElementById('load-more-container');
+      
+      if (!gridElement) return;
+      gridElement.innerHTML = ""; // Bersihkan isi grid lama
+
+      // --- LOGIKA MESIN PENYARING YANG HILANG SEBELUMNYA ---
+      let filtered = globalArticles.filter(art => {
+        const matchCategory = (currentCategory === "semua") || 
+                              (art.kategori && art.kategori.toLowerCase() === currentCategory.toLowerCase());
+        
+        const textSearch = searchQuery.toLowerCase();
+        const matchSearch = !searchQuery || 
+                            (art.judul && art.judul.toLowerCase().includes(textSearch)) || 
+                            (art.konten && art.konten.toLowerCase().includes(textSearch));
+        
+        return matchCategory && matchSearch;
+      });
+
+      // Potong total item sesuai limit halaman (Pagination)
+      const itemsToRender = filtered.slice(0, currentLimit);
+
+      // Tampilkan status jika pencarian kosong
+      if (itemsToRender.length === 0) {
+        gridElement.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-slate-800/20 border border-slate-700/40 rounded-2xl">
+            <p class="text-slate-400 text-sm">Tidak ada artikel gadget yang cocok ditemukan.</p>
+          </div>
+        `;
+        if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
+        return;
+      }
+
+      // Loop rendering kartu HTML kustom stabil
       itemsToRender.forEach((art) => {
         const originalIndex = globalArticles.findIndex(a => a.id === art.id);
         const fallbackImg = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
-
-        // Membersihkan tag HTML kustom agar tidak merusak potongan deskripsi teks di kartu luar
         const kontenBersih = (art.konten || "").replace(/<\/?[^>]+(>|$)/g, "");
 
         const cardHTML = `
           <div class="bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-full transition duration-300 hover:-translate-y-1 hover:shadow-cyan-500/5 hover:border-slate-600">
             
-            <!-- Bagian Atas: Gambar & Teks Konten -->
             <div class="flex flex-col flex-grow">
-              
-              <!-- Pembungkus Gambar Fleksibel untuk Rasio 4:5 Instagram -->
+              <!-- Pembungkus Gambar Fleksibel Rasio 4:5 Instagram -->
               <div class="w-full h-72 bg-slate-950 flex items-center justify-center overflow-hidden relative border-b border-slate-700/30">
                 <img class="absolute inset-0 w-full h-full object-cover opacity-15 blur-md" src="${art.gambar || fallbackImg}">
                 <img class="max-w-full max-h-full object-contain relative z-10" src="${art.gambar || fallbackImg}" alt="Cover">
               </div>
               
-              <!-- Wadah Judul dan Deskripsi Berita -->
               <div class="p-5 flex-grow">
                 <span class="text-xs font-semibold bg-cyan-950/80 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-800/30">
                   ${art.kategori || 'Gadget'}
@@ -209,10 +235,8 @@
                   ${kontenBersih}
                 </p>
               </div>
-
             </div>
             
-            <!-- Bagian Bawah: Tanggal & Tombol Aksi (Selalu Terkunci di Paling Bawah Kartu) -->
             <div class="p-5 pt-0 border-t border-slate-700/20 mt-auto flex justify-between items-center h-14">
               <span class="text-[11px] text-slate-500 font-medium">${art.tanggal || ''}</span>
               <button onclick="openModal(${originalIndex})" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1 cursor-pointer">
@@ -224,11 +248,20 @@
         `;
         gridElement.innerHTML += cardHTML;
       });
+
+      // Atur tombol Load More otomatis muncul/sembunyi
+      if (loadMoreContainer) {
+        if (filtered.length > currentLimit) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      }
     }
 
     function loadMore() {
       currentLimit += ITEMS_PER_PAGE; 
-      applyFilterAndSearch();         
+      applyFilterAndSearch();          
     }
 
     // 3. Efek Visual Tombol Kategori Aktif
@@ -263,7 +296,6 @@
       document.getElementById('modal-category').innerText = art.kategori || 'Gadget';
       document.getElementById('modal-date').innerText = art.tanggal || '';
       
-      // Menggunakan innerHTML agar tag gambar kustom di dalam konten Xiaomi kamu bisa meledak/tampil rapi di dalam modal
       document.getElementById('modal-content').innerHTML = art.konten || ''; 
       document.getElementById('modal-img').src = art.gambar || fallbackImg;
       document.getElementById('modal-img-blur').src = art.gambar || fallbackImg;
