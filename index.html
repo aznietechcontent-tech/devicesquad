@@ -89,20 +89,18 @@
   </footer>
 
   <!-- MODAL BACA SELENGKAPNYA -->
-  <div id="article-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" onclick="closeModal()">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl flex flex-col" onclick="event.stopPropagation()">
+ <div id="article-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" onclick="closeModal()">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl" onclick="event.stopPropagation()">
       
-      <!-- Modal Header Gambar -->
-      <div class="relative bg-slate-950 flex items-center justify-center overflow-hidden min-h-[250px] max-h-[70vh] border-b border-slate-750">
-        <img id="modal-img-blur" class="absolute inset-0 w-full h-full object-cover opacity-20 blur-xl scale-110 pointer-events-none" src="">
+      <div class="relative bg-slate-950 flex items-center justify-center overflow-hidden h-[380px] shrink-0 border-b border-slate-700/50">
+        <img id="modal-img-blur" class="absolute inset-0 w-full h-full object-cover opacity-15 blur-2xl scale-110 pointer-events-none" src="">
         
-        <img id="modal-img" class="w-auto h-auto max-w-full max-h-[70vh] object-contain relative z-10 block" src="" alt="Cover">
+        <img id="modal-img" class="w-auto h-full max-w-full object-contain relative z-10 p-2" src="" alt="Cover">
         
-        <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-900/80 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer z-20 border border-slate-700/50">✕</button>
+        <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-900/80 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer z-20 border border-slate-700/40">✕</button>
       </div>
 
-      <!-- Modal Konten Teks -->
-      <div class="p-6 overflow-y-auto">
+      <div class="p-6 overflow-y-auto flex-grow">
         <div class="flex items-center gap-3 mb-4">
           <span id="modal-category" class="text-xs font-bold bg-cyan-950 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-900/50"></span>
           <span id="modal-date" class="text-xs text-slate-500"></span>
@@ -112,12 +110,9 @@
         
         <div class="border-b border-slate-700/60 my-4"></div>
         
-        <!-- Wadah Teks Paragraf Panjang Berita -->
         <div id="modal-content" class="text-slate-300 text-sm leading-relaxed space-y-4 whitespace-pre-line">
-          <!-- Konten penuh masuk di sini -->
-        </div>
+          </div>
 
-        <!-- Tombol Link Rujukan Sumber Asli -->
         <div class="mt-8 pt-4 border-t border-slate-700/60 flex justify-end">
           <a id="modal-source-link" href="#" target="_blank" class="text-xs bg-slate-900 border border-slate-700 text-cyan-400 hover:text-cyan-300 px-4 py-2.5 rounded-xl font-semibold shadow-md transition hidden">
             Kunjungi Sumber Berita Asli 🌐
