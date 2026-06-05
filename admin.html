@@ -14,7 +14,7 @@
         <img src="devicesquad.jpeg" alt="Logo" class="h-8 w-8 rounded-lg object-cover border border-slate-700/40">
         <div>
           <h1 class="text-sm font-black tracking-tight text-white uppercase leading-none">Device <span class="text-cyan-400">Squad</span></h1>
-          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">AI Instant Publisher v8.0</p>
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">AI Instant Publisher v8.5</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -105,15 +105,15 @@
 
           <div class="space-y-1">
             <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Judul Berita</label>
-            <input type="text" id="judul" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-600" placeholder="Judul akan terbuat otomatis saat Anda mem-paste isi artikel..." required>
+            <input type="text" id="judul" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-600" placeholder="Judul otomatis terbuat saat teks IG di-paste..." required>
           </div>
 
           <div class="space-y-1">
             <div class="flex justify-between items-center pb-1">
               <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Materi Konten Artikel</label>
-              <span class="text-[9px] bg-cyan-950 text-cyan-400 px-2 py-0.5 rounded border border-cyan-900 font-mono">⚡ Auto-AI Expander Active</span>
+              <span class="text-[9px] bg-cyan-950 text-cyan-400 px-2 py-0.5 rounded border border-cyan-900 font-mono">⚡ Auto-AI Detector Active</span>
             </div>
-            <textarea id="konten" onpaste="handleAutoPasteExpander(event)" oninput="syncCardPreview(); trackContentStats();" rows="12" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition leading-relaxed" placeholder="LANGKAH ULTRA SIMPEL:&#10;Cukup salin caption dari Instagram, lalu klik kanan dan PASTE di sini. &#10;&#10;Sistem AI akan langsung merombak struktur kalimatnya secara instan menjadi artikel formal, panjang, luwes, dan aman dari blokir AdSense!" required></textarea>
+            <textarea id="konten" oninput="monitorAndExpandContent()" rows="12" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition leading-relaxed" placeholder="LANGKAH GAMPANG:&#10;Cukup salin caption Instagram, lalu PASTE di sini. &#10;&#10;Sistem AI akan otomatis membaca perubahan teks, membersihkan hashtag/emoji, lalu mengonversinya menjadi artikel panjang formal anti-banned AdSense secara real-time!" required></textarea>
           </div>
 
           <div class="pt-1">
@@ -170,6 +170,7 @@
     const DRAFT_KEY = "device_squad_draft_content";
     
     let cacheDatabaseMemory = [];
+    let isEditingOldArticle = false; // Flag penting agar data lama dari tabel database tidak rusak saat di-load
 
     // 1. GATEKEEPER & AUTO-LOAD
     (function checkSecurity() {
@@ -183,66 +184,68 @@
       }
     })();
 
-    // 2. LOGIKA OTOMATIS SAAT USER MELAKUKAN PASTE TERSUNTIKKAN EVENT LISTENER
-    function handleAutoPasteExpander(event) {
-      // Ambil text murni dari clipboard browser sebelum masuk ke textarea
-      const clipboardData = event.clipboardData || window.clipboardData;
-      let pastedText = clipboardData.getData('Text').trim();
+    // 2. DETEKTOR & PROSES UTAMA EKSPANSI AI OTOMATIS (REAL-TIME INPUT LISTENER)
+    function monitorAndExpandContent() {
+      const area = document.getElementById('konten');
+      let text = area.value;
 
-      if (!pastedText) return;
-
-      // Cek apakah teks ini tampak seperti caption IG baru (bukan artikel yang sedang di-edit dari tabel bawah)
-      // Jika teks yang di-paste sudah panjang (diatas 400 karakter), kita asumsikan user sedang melakukan edit biasa.
-      if (pastedText.length > 400 && !pastedText.includes('#')) {
-         return; // Lewati pemrosesan otomatis agar tidak merusak proses editing normal
+      // JIKA SEDANG EDIT ARTIKEL LAMA, MATIKAN FUNGSI AUTO-EXPAND AGAR TULISAN TIDAK RUSAK
+      if (isEditingOldArticle) {
+        syncCardPreview();
+        trackContentStats();
+        saveCurrentDraft();
+        return;
       }
 
-      // Hentikan proses paste bawaan HTML agar tidak terjadi penumpukan teks ganda
-      event.preventDefault();
+      // SYARAT PEMICU: Hanya memproses jika mendeteksi teks khas Instagram seperti simbol '#' atau banyak emoji
+      const hasHashtags = text.includes('#');
+      const hasInstagramTraits = text.includes('🔥') || text.includes('👀') || text.includes('✨') || text.toLowerCase().includes('worth it') || text.toLowerCase().includes('spek');
 
-      // PROSES ALGORITMA PEMBERSIHAN & EKSPANSI AI ANTI-ADSENSE BANNED
-      pastedText = pastedText.replace(/#\w+/g, ''); // Hapus Hashtag
-      pastedText = pastedText.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, ''); // Hapus Emoji Medsos
+      if (hasHashtags || (text.length > 20 && hasInstagramTraits)) {
+        
+        // Mulai pembersihan teks
+        let cleanText = text.replace(/#\w+/g, ''); // Hapus Hashtag
+        cleanText = cleanText.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, ''); // Hapus Emoji Medsos
 
-      // Kamus Konversi Bahasa Kasual Medsos ke Jurnalistik Media Massa
-      const slangDict = {
-        " yg ": " yang ", " dngn ": " dengan ", " dgn ": " dengan ", " ttg ": " tentang ",
-        " bnyk ": " banyak ", " hp ": " smartphone ", " sdh ": " sudah ", " blm ": " belum ",
-        " jd ": " jadi ", " tp ": " tetapi ", " dapet ": " mendapatkan ", " spek ": " spesifikasi ",
-        " murah ": " kompetitif ", " rilis ": " resmi diperkenalkan ", " batre ": " kapasitas daya baterai ",
-        " jg ": " juga ", " kmrn ": " beberapa waktu lalu ", " bwt ": " untuk ", " dlm ": " dalam ",
-        " gila ": " sangat luar biasa ", " worth it ": " sangat direkomendasikan ", " wortit ": " direkomendasikan "
-      };
-      Object.keys(slangDict).forEach(key => {
-        pastedText = pastedText.replace(new RegExp(key, "gi"), slangDict[key]);
-      });
+        // Kamus Konversi Bahasa Kasual Medsos ke Jurnalistik Media Massa Berita Resmi
+        const slangDict = {
+          " yg ": " yang ", " dngn ": " dengan ", " dgn ": " dengan ", " ttg ": " tentang ",
+          " bnyk ": " banyak ", " hp ": " smartphone ", " sdh ": " sudah ", " blm ": " belum ",
+          " jd ": " jadi ", " tp ": " tetapi ", " dapet ": " mendapatkan ", " spek ": " spesifikasi ",
+          " murah ": " kompetitif ", " rilis ": " resmi diperkenalkan ", " batre ": " kapasitas daya baterai ",
+          " jg ": " juga ", " kmrn ": " beberapa waktu lalu ", " bwt ": " untuk ", " dlm ": " dalam ",
+          " gila ": " sangat luar biasa ", " worth it ": " sangat direkomendasikan ", " wortit ": " direkomendasikan "
+        };
+        Object.keys(slangDict).forEach(key => {
+          cleanText = cleanText.replace(new RegExp(key, "gi"), slangDict[key]);
+        });
 
-      // Deteksi Brand Otomatis untuk Kustomisasi Teks Pengantar
-      let brandDetected = "perangkat teknologi terbaru";
-      const lowered = pastedText.toLowerCase();
-      if (lowered.includes("xiaomi")) brandDetected = "lini produk Xiaomi";
-      else if (lowered.includes("samsung")) brandDetected = "ekosistem Samsung";
-      else if (lowered.includes("iphone") || lowered.includes("apple")) brandDetected = "perangkat premium Apple";
-      else if (lowered.includes("vivo")) brandDetected = "vendor teknologi Vivo";
-      else if (lowered.includes("oppo")) brandDetected = "pabrikan ponsel Oppo";
-      else if (lowered.includes("infinix")) brandDetected = "jenama naik daun Infinix";
+        // Deteksi Brand Otomatis untuk Pengkondisian Teks Pengantar Jurnalistik
+        let brandDetected = "perangkat teknologi terbaru";
+        const lowered = cleanText.toLowerCase();
+        if (lowered.includes("xiaomi")) brandDetected = "lini produk Xiaomi";
+        else if (lowered.includes("samsung")) brandDetected = "ekosistem Samsung";
+        else if (lowered.includes("iphone") || lowered.includes("apple")) brandDetected = "perangkat premium Apple";
+        else if (lowered.includes("vivo")) brandDetected = "vendor teknologi Vivo";
+        else if (lowered.includes("oppo")) brandDetected = "pabrikan ponsel Oppo";
+        else if (lowered.includes("infinix")) brandDetected = "jenama naik daun Infinix";
 
-      // Perakitan Struktur Artikel Profesional
-      let paragraphPembuka = `Perkembangan industri teknologi global kembali bergerak dinamis dengan hadirnya inovasi terbaru. Kali ini, perhatian pasar tertuju pada pergerakan pasar ${brandDetected} yang digadang-gadang siap menghadirkan perubahan signifikan bagi para pengguna setianya di Indonesia.`;
-      let paragraphInti = pastedText.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-      let paragraphPenutup = `Secara keseluruhan, langkah taktis yang diambil oleh produsen ini mempertegas ketatnya persaingan di sektor komputasi bergerak saat ini. Menarik untuk dinantikan bagaimana respons pasar lokal dan sejauh mana produk ini mampu mendominasi pasar dalam beberapa kuartal ke depan.`;
+        // Kontstruksi Perakitan Paragraf Tambahan Anti-AdSense Sandbox
+        let paragraphPembuka = `Perkembangan industri teknologi global kembali bergerak dinamis dengan hadirnya inovasi terbaru. Kali ini, perhatian pasar tertuju pada pergerakan pasar ${brandDetected} yang digadang-gadang siap menghadirkan perubahan signifikan bagi para pengguna setianya di Indonesia.`;
+        let paragraphInti = cleanText.trim().replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+        let paragraphPenutup = `Secara keseluruhan, langkah taktis yang diambil oleh produsen ini mempertegas ketatnya persaingan di sektor komputasi bergerak saat ini. Menarik untuk dinantikan bagaimana respons pasar lokal dan sejauh mana produk ini mampu mendominasi pasar dalam beberapa kuartal ke depan.`;
 
-      // Gabungkan Hasil Akhir ke Kolom Textarea
-      document.getElementById('konten').value = `${paragraphPembuka}\n\n${paragraphInti}\n\n${paragraphPenutup}`;
+        // Masukkan Hasil Ekspansi AI ke Kolom Textarea menggantikan tulisan lama
+        area.value = `${paragraphPembuka}\n\n${paragraphInti}\n\n${paragraphPenutup}`;
 
-      // JIKA INPUT JUDUL KOSONG, BUATKAN JUDUL SECARA OTOMATIS
-      const judulInput = document.getElementById('judul');
-      if (!judulInput.value.trim() || judulInput.value.startsWith("Judul akan terbuat")) {
-        let keywordJudul = brandDetected.toUpperCase();
-        judulInput.value = `Review Perkembangan Teknologi: Analisis Mendalam Mengenai ${keywordJudul} Terkini`;
+        // JIKA INPUT JUDUL KOSONG, BUATKAN JUDUL SECARA OTOMATIS
+        const judulInput = document.getElementById('judul');
+        if (!judulInput.value.trim() || judulInput.value.startsWith("Judul otomatis")) {
+          judulInput.value = `Review Perkembangan Teknologi: Analisis Mendalam Mengenai ${brandDetected.toUpperCase()} Terkini`;
+        }
       }
 
-      // Sinkronisasi Seluruh Workspace
+      // Sinkronisasi database lokal & visual draf card preview
       syncCardPreview();
       trackContentStats();
       saveCurrentDraft();
@@ -310,6 +313,8 @@
 
     function loadArticleToWorkspace(kategori, sumber, gambar, judul, kontenEscaped) {
       if (confirm(`Muat kembali artikel "${judul}" ke workspace?`)) {
+        isEditingOldArticle = true; // Aktifkan kunci pengaman draf edit data lama
+
         let doc = new DOMParser().parseFromString(kontenEscaped, "text/html");
         let kontenHTML = doc.documentElement.textContent;
         let cleanTextareaContent = kontenHTML.replace(/<p[^>]*>/g, "").replace(/<\/p>/g, "\n").trim();
@@ -365,7 +370,7 @@
         } catch(e) {}
       }
       syncCardPreview(); trackContentStats();
-      ['kategori', 'sumber', 'gambar', 'judul', 'konten'].forEach(id => {
+      ['kategori', 'sumber', 'gambar', 'judul'].forEach(id => {
         document.getElementById(id).addEventListener('input', saveCurrentDraft);
       });
     };
@@ -384,13 +389,13 @@
 
     function clearDraft() {
       if (confirm("Kosongkan draf kerja?")) {
+        isEditingOldArticle = false; // Kembalikan ke mode tulis baru
         localStorage.removeItem(DRAFT_KEY); document.getElementById('article-form').reset();
         syncCardPreview(); trackContentStats();
         document.getElementById('draft-status').innerText = "Form kosong";
       }
     }
 
-    // Hitung statistik karakter & durasi membaca secara realtime
     function trackContentStats() {
       const text = document.getElementById('konten').value || "";
       document.getElementById('char-count').innerText = text.length;
@@ -438,6 +443,7 @@
         });
 
         alert(`SUKSES! \nArtikel "${judul}" berhasil disiarkan.`);
+        isEditingOldArticle = false; // Kembalikan ke mode tulis baru
         localStorage.removeItem(DRAFT_KEY);
         document.getElementById('article-form').reset();
         syncCardPreview(); trackContentStats(); fetchLiveDatabase();
