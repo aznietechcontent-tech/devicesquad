@@ -221,9 +221,11 @@
 
         const cardHTML = `
           <div class="bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between transition duration-300 hover:-translate-y-1 hover:shadow-cyan-500/5 hover:border-slate-600">
-            <div>
-              <img class="w-full h-48 object-cover bg-slate-950" src="${art.gambar || fallbackImg}" alt="Cover">
-              <div class="p-5">
+            <!-- KODE BARU (Fleksibel, gambar 4:5 akan ditampilkan utuh dengan efek background blur/gelap di sisinya) -->
+            <div class="w-full h-64 bg-slate-950 flex items-center justify-center overflow-hidden relative">
+              <img class="absolute inset-0 w-full h-full object-cover opacity-20 blur-md" src="${art.gambar || fallbackImg}">
+              <img class="max-w-full max-h-full object-contain relative z-10" src="${art.gambar || fallbackImg}" alt="Cover">
+            </div>
                 <span class="text-xs font-semibold bg-cyan-950/80 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-800/30">
                   ${art.kategori || 'Gadget'}
                 </span>
