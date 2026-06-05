@@ -83,6 +83,22 @@
             </tbody>
         </table>
       </div>
+      <!-- Kolom URL Gambar + Pratinjau -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">URL Gambar Artikel (Direct Link .jpg/.png)</label>
+        <input type="url" id="gambar" oninput="previewImage()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition shadow-inner" placeholder="https://i.ibb.co/xxxx/gambar.jpg" required>
+        
+        <!-- Box Pratinjau Gambar Otomatis -->
+        <div id="image-preview-container" class="hidden mt-3 p-2 bg-slate-900 border border-slate-750 rounded-xl flex justify-center overflow-hidden max-h-60 bg-slate-950">
+          <img id="image-preview" src="" class="max-w-full max-h-56 object-contain rounded-lg">
+        </div>
+      </div>
+
+      <!-- Kolom Isi Konten Berita -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Isi Konten Berita</label>
+        <textarea id="konten" rows="8" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition shadow-inner leading-relaxed" placeholder="Tulis spesifikasi lengkap, performa, dan harga di sini. Cukup tekan Enter untuk membuat paragraf baru..." required></textarea>
+      </div>
     </div>
 
   </main>
