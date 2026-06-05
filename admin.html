@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Device Squad - Enterprise Master Dashboard</title>
+  <title>Device Squad - Ultimate Overlord Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body id="admin-body" class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between hidden">
@@ -15,16 +15,16 @@
         <img src="devicesquad.jpeg" alt="Logo" class="h-8 w-8 rounded-lg object-cover border border-slate-700/40">
         <div>
           <h1 class="text-sm font-black tracking-tight text-white uppercase leading-none">Device <span class="text-cyan-400">Squad</span></h1>
-          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Enterprise Master Engine v5.1</p>
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Ultimate Overlord Engine v6.0</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
-        <button onclick="fetchLiveDatabase()" class="text-[10px] bg-slate-950 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider text-cyan-400 cursor-pointer">
-          🔄 Cek Database Live
+        <button onclick="fetchLiveDatabase()" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-800/40 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider text-cyan-400 cursor-pointer transition">
+          🔄 Sinkronisasi Cloud Live
         </button>
         <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
-          <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span id="system-status" class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ready</span>
+          <span id="status-pulse" class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span id="system-status" class="text-[10px] font-bold uppercase tracking-wider text-slate-400">System Ready</span>
         </div>
       </div>
     </div>
@@ -39,19 +39,19 @@
         
         <!-- LIVE MONITOR STATS -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
-          <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Live Monitor & Utilities</h3>
+          <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Workspace Diagnostics</h3>
           <div class="grid grid-cols-2 gap-2">
             <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60 text-center">
-              <p class="text-[9px] font-bold text-slate-500 uppercase">Karakter</p>
+              <p class="text-[9px] font-bold text-slate-500 uppercase">Karakter Konten</p>
               <p id="char-count" class="text-base font-black text-white mt-0.5">0</p>
             </div>
             <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60 text-center">
-              <p class="text-[9px] font-bold text-slate-500 uppercase">Estimasi Baca</p>
+              <p class="text-[9px] font-bold text-slate-500 uppercase">Durasi Baca</p>
               <p id="read-time" class="text-base font-black text-cyan-400 mt-0.5">0m</p>
             </div>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-            <span id="draft-status" class="text-emerald-400 font-medium">Draf aman</span>
+            <span id="draft-status" class="text-emerald-400 font-medium">Workspace Stabil</span>
             <button onclick="clearDraft()" class="text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-[9px] cursor-pointer">Reset Form 🗑️</button>
           </div>
         </div>
@@ -93,7 +93,7 @@
         <!-- LIVE CARD PREVIEW -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
           <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Live Card Preview</h3>
-          <div class="bg-slate-850 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-[400px]">
+          <div class="bg-slate-850 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-[390px]">
             <div class="flex flex-col flex-grow">
               <div class="w-full h-44 bg-slate-950 flex items-center justify-center overflow-hidden relative border-b border-slate-700/30">
                 <img id="card-preview-blur" class="absolute inset-0 w-full h-full object-cover opacity-15 blur-md" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500">
@@ -152,7 +152,6 @@
             <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-1">
               <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Materi Konten Artikel</label>
               <div class="flex items-center gap-2">
-                <!-- FITUR BARU: LINK SHORTCUT INSTAGRAM DEVICE SQUAD -->
                 <a href="https://www.instagram.com/devicesquad/" target="_blank" class="text-[9px] font-black uppercase tracking-wider bg-slate-950 hover:bg-slate-800 text-pink-400 px-2.5 py-1 rounded border border-slate-800 shadow-sm transition flex items-center gap-1">
                   📸 IG Device Squad &rarr;
                 </a>
@@ -174,17 +173,22 @@
       </div>
     </div>
 
-    <!-- PANEL DATABASE RETAILER (DAFTAR ARTIKEL TERBIT) -->
+    <!-- PANEL DATABASE DENGAN GLOBAL LIVE SEARCH & ACTION ENGINE -->
     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
-      <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+      <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4 border-b border-slate-800 pb-4">
         <div>
-          <h3 class="text-xs font-black uppercase tracking-wider text-white">Live Database Monitor</h3>
-          <p class="text-[10px] text-slate-500">Daftar artikel terbit yang tersimpan di Google Sheets milikmu</p>
+          <h3 class="text-xs font-black uppercase tracking-wider text-white">Interactive Database Controller</h3>
+          <p class="text-[10px] text-slate-500">Cari, filter, dan load data langsung dari cloud server utama</p>
         </div>
-        <span id="db-count" class="text-xs bg-slate-950 border border-slate-800 px-3 py-1 rounded-full text-cyan-400 font-bold">0 Artikel Terdeteksi</span>
+        
+        <!-- FITUR BARU: MESIN PENCARI REAL-TIME -->
+        <div class="flex flex-wrap items-center gap-2">
+          <input type="text" id="db-search" oninput="filterDatabaseTable()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-[11px] text-white focus:outline-none focus:border-cyan-500 placeholder-slate-700 min-w-[200px]" placeholder="Cari judul / kategori artikel...">
+          <span id="db-count" class="text-[10px] bg-slate-950 border border-slate-800 px-3 py-2 rounded-xl text-cyan-400 font-bold whitespace-nowrap">0 Terdeteksi</span>
+        </div>
       </div>
       
-      <!-- Tabel Monitoring Mini -->
+      <!-- Tabel Monitoring Interaktif -->
       <div class="overflow-x-auto rounded-xl border border-slate-800/80 bg-slate-950/40">
         <table class="w-full text-left text-xs border-collapse">
           <thead>
@@ -192,12 +196,12 @@
               <th class="p-3">Tanggal</th>
               <th class="p-3">Kategori</th>
               <th class="p-3">Judul Berita</th>
-              <th class="p-3">Link Sumber</th>
+              <th class="p-3 text-center">Tindakan Kontrol</th>
             </tr>
           </thead>
           <tbody id="db-table-body" class="divide-y divide-slate-900 text-slate-300">
             <tr>
-              <td colspan="4" class="p-4 text-center text-slate-600 font-medium">Klik tombol "Cek Database Live" di atas untuk memuat data riwayat...</td>
+              <td colspan="4" class="p-4 text-center text-slate-600 font-medium">Silakan klik tombol "Sinkronisasi Cloud Live" di atas untuk menyalakan panel kontrol...</td>
             </tr>
           </tbody>
         </table>
@@ -207,15 +211,16 @@
   </main>
 
   <footer class="bg-slate-950 border-t border-slate-900 py-3 text-center text-[9px] text-slate-600 tracking-wider">
-    <p>&copy; 2026 Device Squad Control Hub. Database Synchronizer Enabled.</p>
+    <p>&copy; 2026 Device Squad Cyber Core. Full Command Protocol Online.</p>
   </footer>
 
   <!-- CORE DASHBOARD LOGIC ENGINE -->
   <script>
     const SECURITY_PIN = "1234"; // Password login admin kamu
-    
     const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     const DRAFT_KEY = "device_squad_draft_content";
+    
+    let cacheDatabaseMemory = []; // Menyimpan salinan data server di memori lokal browser
 
     // 1. GATEKEEPER SECURITY
     (function checkSecurity() {
@@ -228,47 +233,108 @@
       }
     })();
 
-    // 2. MENGAMBIL DATA LANGSUNG DARI GOOGLE SHEETS KE ADMIN (DATABASE READER)
+    // 2. INTERACTIVE DATABASE READER & INJECTOR ENGINE
     async function fetchLiveDatabase() {
       const tbody = document.getElementById('db-table-body');
       const countBadge = document.getElementById('db-count');
       const statusIndicator = document.getElementById('system-status');
+      const pulse = document.getElementById('status-pulse');
       
-      tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-cyan-400 animate-pulse font-bold">Mengontak Google Sheets... Harap Tunggu...</td></tr>`;
-      statusIndicator.innerText = "READING DATABASE";
+      tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-cyan-400 animate-pulse font-bold">Menghubungkan ke Cloud Server Terdistribusi...</td></tr>`;
+      statusIndicator.innerText = "SYNCING CLOUD";
       statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-cyan-400";
+      pulse.className = "h-1.5 w-1.5 rounded-full bg-amber-400 animate-ping";
 
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
         
         if (data && data.length > 0) {
-          tbody.innerHTML = "";
-          countBadge.innerText = `${data.length} Artikel Terdeteksi`;
-          
-          const reversedData = [...data].reverse();
-
-          reversedData.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-slate-900/60 transition";
-            tr.innerHTML = `
-              <td class="p-3 text-slate-500 font-mono whitespace-nowrap">${item.tanggal || '-'}</td>
-              <td class="p-3"><span class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 px-2 py-0.5 rounded">${item.kategori || 'Gadget'}</span></td>
-              <td class="p-3 font-bold text-white max-w-xs truncate">${item.judul || 'Tanpa Judul'}</td>
-              <td class="p-3"><a href="${item.sumber}" target="_blank" class="text-cyan-400 hover:underline truncate inline-block max-w-[120px]">${item.sumber !== '#' ? 'Buka Sumber 🔗' : '-'}</a></td>
-            `;
-            tbody.appendChild(tr);
-          });
+          cacheDatabaseMemory = [...data].reverse(); // Simpan ke ram lokal dan balik data terbaru ke atas
+          renderTableData(cacheDatabaseMemory);
         } else {
-          tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Database kosong atau kolom tidak sesuai.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Koneksi berhasil, namun database kosong.</td></tr>`;
         }
       } catch (err) {
         console.error(err);
-        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-400">Gagal memuat database riwayat. Pastikan pengaturan Web App Google Sheets-mu mendukung akses GET (doGet).</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-400">Gagal Sinkronisasi. Periksa kembali jaringan internet atau konfigurasi doGet Google Sheets.</td></tr>`;
       } finally {
-        statusIndicator.innerText = "READY";
-        statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-slate-400";
+        statusIndicator.innerText = "SYSTEM ACTIVE";
+        statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-emerald-400";
+        pulse.className = "h-1.5 w-1.5 rounded-full bg-emerald-400";
       }
+    }
+
+    // Merender baris tabel berdasarkan data array
+    function renderTableData(dataArray) {
+      const tbody = document.getElementById('db-table-body');
+      const countBadge = document.getElementById('db-count');
+      
+      tbody.innerHTML = "";
+      countBadge.innerText = `${dataArray.length} Terdeteksi`;
+
+      if (dataArray.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-600">Tidak ada artikel yang cocok dengan pencarian.</td></tr>`;
+        return;
+      }
+
+      dataArray.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/60 transition text-slate-300";
+        
+        // Escape content string agar aman dimasukkan ke attribute javascript
+        const safeKonten = (item.konten || "").replace(/"/g, '&quot;').replace(/'/g, "\\'");
+
+        tr.innerHTML = `
+          <td class="p-3 text-slate-500 font-mono text-[11px] whitespace-nowrap">${item.tanggal || '-'}</td>
+          <td class="p-3"><span class="text-[10px] bg-slate-900 border border-slate-800 text-slate-400 px-2 py-0.5 rounded">${item.kategori || 'Gadget'}</span></td>
+          <td class="p-3 font-bold text-white max-w-xs truncate">${item.judul || 'Tanpa Judul'}</td>
+          <td class="p-3 flex items-center justify-center gap-3">
+            <button type="button" onclick="loadArticleToWorkspace('${item.kategori}', '${item.sumber}', '${item.gambar}', '${item.judul}', '${safeKonten}')" class="bg-cyan-500/10 hover:bg-cyan-500 text-cyan-400 hover:text-slate-950 border border-cyan-500/20 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider transition cursor-pointer">
+              Edit 📝
+            </button>
+            <a href="${item.sumber}" target="_blank" class="bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition text-center min-w-[75px]">
+              ${item.sumber !== '#' ? 'Sumber 🔗' : 'No Link'}
+            </a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // FITUR REVOLUSIONER: COPY DATA DARI TABEL BAWAH LANGSUNG INJEKSI KE FORM ATAS
+    function loadArticleToWorkspace(kategori, sumber, gambar, judul, kontenHTML) {
+      if (confirm(`Apakah Anda yakin ingin memuat artikel:\n"${judul}" ke dalam Workspace kerja?\n\n*Catatan: Ketikan Anda yang ada di form saat ini akan ditimpa.`)) {
+        
+        // Bersihkan tag-tag HTML <p class="..."> dari database agar kembali jadi teks biasa di textarea
+        let cleanTextareaContent = kontenHTML
+          .replace(/<p[^>]*>/g, "")
+          .replace(/<\/p>/g, "\n")
+          .trim();
+
+        document.getElementById('kategori').value = kategori || "Gadget";
+        document.getElementById('sumber').value = sumber === "#" ? "" : sumber;
+        document.getElementById('gambar').value = gambar || "";
+        document.getElementById('judul').value = judul || "";
+        document.getElementById('konten').value = cleanTextareaContent;
+
+        syncCardPreview();
+        trackContentStats();
+        saveCurrentDraft();
+        
+        document.getElementById('draft-status').innerText = "Data berhasil di-load! 📂";
+        window.scrollTo({ top: document.getElementById('article-form').offsetTop - 80, behavior: 'smooth' });
+      }
+    }
+
+    // FITUR REVOLUSIONER: LIVE FILTERING DATABASE TANPA REFRESH
+    function filterDatabaseTable() {
+      const keyword = document.getElementById('db-search').value.toLowerCase();
+      const filtered = cacheDatabaseMemory.filter(item => {
+        return (item.judul || "").toLowerCase().includes(keyword) || 
+               (item.kategori || "").toLowerCase().includes(keyword);
+      });
+      renderTableData(filtered);
     }
 
     // 3. AI REWRITER ENGINE
@@ -490,8 +556,6 @@
         document.getElementById('article-form').reset();
         syncCardPreview();
         trackContentStats();
-        statusIndicator.innerText = "READY";
-        statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-slate-400";
         
         fetchLiveDatabase();
       } catch (error) {
