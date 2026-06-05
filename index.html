@@ -178,58 +178,27 @@
 
     // 2. Pemrosesan Filter, Search, dan Batasan Tampilan (Pagination)
     function applyFilterAndSearch() {
-      const gridElement = document.getElementById('articles-grid');
-      const loadMoreContainer = document.getElementById('load-more-container');
-      
-      if (!gridElement) return;
-      gridElement.innerHTML = ''; 
-
-      const filtered = globalArticles.filter(art => {
-        // Mengamankan huruf besar-kecil kategori dari Google Sheets (.toLowerCase())
-        const kategoriArtikel = (art.kategori || "Gadget").trim().toLowerCase();
-        const kategoriTarget = currentCategory.trim().toLowerCase();
-        
-        const matchCategory = (kategoriTarget === "semua" || kategoriArtikel === kategoriTarget);
-        const textToSearch = ((art.judul || "") + " " + (art.konten || "")).toLowerCase();
-        const matchSearch = textToSearch.includes(searchQuery.toLowerCase());
-        
-        return matchCategory && matchSearch;
-      });
-
-      if (filtered.length === 0) {
-        gridElement.innerHTML = `
-          <div class="text-center py-16 col-span-full">
-            <p class="text-slate-500 text-sm">Tidak ada artikel gadget yang cocok dengan kriteria tersebut.</p>
-          </div>
-        `;
-        if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
-        return;
-      }
-
-      if (loadMoreContainer) {
-        if (filtered.length > currentLimit) {
-          loadMoreContainer.classList.remove('hidden');
-        } else {
-          loadMoreContainer.classList.add('hidden');
-        }
-      }
-
-      const itemsToRender = filtered.slice(0, currentLimit);
-
       itemsToRender.forEach((art) => {
         const originalIndex = globalArticles.findIndex(a => a.id === art.id);
         const fallbackImg = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
 
-        // Membersihkan tag HTML kustom (<img...>) agar tidak merusak potongan deskripsi teks di kartu luar
+        // Membersihkan tag HTML kustom agar tidak merusak potongan deskripsi teks di kartu luar
         const kontenBersih = (art.konten || "").replace(/<\/?[^>]+(>|$)/g, "");
 
         const cardHTML = `
-          <div class="bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between transition duration-300 hover:-translate-y-1 hover:shadow-cyan-500/5 hover:border-slate-600">
-            <!-- KODE BARU (Fleksibel, gambar 4:5 akan ditampilkan utuh dengan efek background blur/gelap di sisinya) -->
-            <div class="w-full h-64 bg-slate-950 flex items-center justify-center overflow-hidden relative">
-              <img class="absolute inset-0 w-full h-full object-cover opacity-20 blur-md" src="${art.gambar || fallbackImg}">
-              <img class="max-w-full max-h-full object-contain relative z-10" src="${art.gambar || fallbackImg}" alt="Cover">
-            </div>
+          <div class="bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-full transition duration-300 hover:-translate-y-1 hover:shadow-cyan-500/5 hover:border-slate-600">
+            
+            <!-- Bagian Atas: Gambar & Teks Konten -->
+            <div class="flex flex-col flex-grow">
+              
+              <!-- Pembungkus Gambar Fleksibel untuk Rasio 4:5 Instagram -->
+              <div class="w-full h-72 bg-slate-950 flex items-center justify-center overflow-hidden relative border-b border-slate-700/30">
+                <img class="absolute inset-0 w-full h-full object-cover opacity-15 blur-md" src="${art.gambar || fallbackImg}">
+                <img class="max-w-full max-h-full object-contain relative z-10" src="${art.gambar || fallbackImg}" alt="Cover">
+              </div>
+              
+              <!-- Wadah Judul dan Deskripsi Berita -->
+              <div class="p-5 flex-grow">
                 <span class="text-xs font-semibold bg-cyan-950/80 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-800/30">
                   ${art.kategori || 'Gadget'}
                 </span>
@@ -240,13 +209,17 @@
                   ${kontenBersih}
                 </p>
               </div>
+
             </div>
-            <div class="p-5 pt-0 flex justify-between items-center mt-4">
+            
+            <!-- Bagian Bawah: Tanggal & Tombol Aksi (Selalu Terkunci di Paling Bawah Kartu) -->
+            <div class="p-5 pt-0 border-t border-slate-700/20 mt-auto flex justify-between items-center h-14">
               <span class="text-[11px] text-slate-500 font-medium">${art.tanggal || ''}</span>
               <button onclick="openModal(${originalIndex})" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1 cursor-pointer">
                 Baca Selengkapnya &rarr;
               </button>
             </div>
+
           </div>
         `;
         gridElement.innerHTML += cardHTML;
