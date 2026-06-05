@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Device Squad - AI Publisher Dashboard</title>
+  <title>Device Squad - Enterprise Master Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body id="admin-body" class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between hidden">
@@ -15,159 +15,205 @@
         <img src="devicesquad.jpeg" alt="Logo" class="h-8 w-8 rounded-lg object-cover border border-slate-700/40">
         <div>
           <h1 class="text-sm font-black tracking-tight text-white uppercase leading-none">Device <span class="text-cyan-400">Squad</span></h1>
-          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">AI Enhanced Workspace v4.0</p>
+          <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Enterprise Master Engine v5.1</p>
         </div>
       </div>
-      <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
-        <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-        <span id="system-status" class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ready</span>
+      <div class="flex items-center gap-3">
+        <button onclick="fetchLiveDatabase()" class="text-[10px] bg-slate-950 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider text-cyan-400 cursor-pointer">
+          🔄 Cek Database Live
+        </button>
+        <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span id="system-status" class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ready</span>
+        </div>
       </div>
     </div>
   </nav>
 
   <!-- MAIN WORKSPACE -->
-  <main class="container mx-auto px-4 my-8 flex-grow max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <main class="container mx-auto px-4 my-8 flex-grow max-w-6xl space-y-8">
     
-    <!-- LEFT SIDEBAR: LIVE PREVIEWS & ASSISTANT TOOLS (4 COLS) -->
-    <div class="space-y-6 lg:col-span-4">
-      
-      <!-- LIVE MONITOR STATS -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
-        <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Live Monitor & Utilities</h3>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60 text-center">
-            <p class="text-[9px] font-bold text-slate-500 uppercase">Karakter</p>
-            <p id="char-count" class="text-base font-black text-white mt-0.5">0</p>
-          </div>
-          <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60 text-center">
-            <p class="text-[9px] font-bold text-slate-500 uppercase">Estimasi Baca</p>
-            <p id="read-time" class="text-base font-black text-cyan-400 mt-0.5">0m</p>
-          </div>
-        </div>
-        <div class="mt-3 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
-          <span id="draft-status" class="text-emerald-400 font-medium">Draf aman</span>
-          <button onclick="clearDraft()" class="text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-[9px] cursor-pointer">Reset Form 🗑️</button>
-        </div>
-      </div>
-
-      <!-- PINTASAN ASISTEN REDAKSI (SMART TOOLS PANEL) -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
-        <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400">Smart AI Editor Toolkit</h3>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- LEFT SIDEBAR: LIVE PREVIEWS & TOOLS (4 COLS) -->
+      <div class="space-y-6 lg:col-span-4">
         
-        <button type="button" onclick="aiOptimizeSpelling()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
-          <span class="text-base">✨</span>
-          <div>
-            <p class="font-bold text-white">Merapikan Bahasa & Typo</p>
-            <p class="text-[10px] text-slate-500">Ubah singkatan/tulisan acak jadi bahasa berita baku</p>
-          </div>
-        </button>
-
-        <button type="button" onclick="aiFormatSpecs()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
-          <span class="text-base">📋</span>
-          <div>
-            <p class="font-bold text-white">Auto-Format Spesifikasi</p>
-            <p class="text-[10px] text-slate-500">Ubah teks koma menjadi susunan list poin rapi</p>
-          </div>
-        </button>
-
-        <button type="button" onclick="aiGenerateHeadlines()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
-          <span class="text-base">💡</span>
-          <div>
-            <p class="font-bold text-white">Ide Judul Berita (Headline)</p>
-            <p class="text-[10px] text-slate-500">Buat ide judul menarik berdasarkan isi tulisan</p>
-          </div>
-        </button>
-
-        <!-- Box Hasil Rekomendasi Judul AI -->
-        <div id="ai-headline-box" class="hidden p-3 bg-slate-950 border border-cyan-950 rounded-xl space-y-2">
-          <p class="text-[9px] font-black uppercase text-cyan-400">Rekomendasi Judul AI (Klik untuk pakai):</p>
-          <div id="headline-suggestions" class="space-y-1.5 text-[11px] text-slate-300"></div>
-        </div>
-      </div>
-
-      <!-- LIVE CARD PREVIEW -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
-        <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Live Card Preview</h3>
-        <div class="bg-slate-850 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-[420px]">
-          <div class="flex flex-col flex-grow">
-            <div class="w-full h-48 bg-slate-950 flex items-center justify-center overflow-hidden relative border-b border-slate-700/30">
-              <img id="card-preview-blur" class="absolute inset-0 w-full h-full object-cover opacity-15 blur-md" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500">
-              <img id="card-preview-img" class="max-w-full max-h-full object-contain relative z-10" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500">
+        <!-- LIVE MONITOR STATS -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
+          <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Live Monitor & Utilities</h3>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60 text-center">
+              <p class="text-[9px] font-bold text-slate-500 uppercase">Karakter</p>
+              <p id="char-count" class="text-base font-black text-white mt-0.5">0</p>
             </div>
-            <div class="p-4 flex-grow">
-              <span id="card-preview-tag" class="text-[10px] font-bold bg-cyan-950/80 text-cyan-400 px-2 py-0.5 rounded border border-cyan-800/30">Gadget</span>
-              <h2 id="card-preview-title" class="text-sm font-bold mt-2 text-white line-clamp-2 leading-snug">Judul Artikel Gadget Kamu...</h2>
-              <p id="card-preview-snippet" class="text-slate-400 text-[11px] mt-1 line-clamp-3 leading-relaxed">Isi berita...</p>
+            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60 text-center">
+              <p class="text-[9px] font-bold text-slate-500 uppercase">Estimasi Baca</p>
+              <p id="read-time" class="text-base font-black text-cyan-400 mt-0.5">0m</p>
             </div>
           </div>
-          <div class="p-4 pt-0 border-t border-slate-700/20 mt-auto flex justify-between items-center h-10">
-            <span class="text-[10px] text-slate-500 font-medium">Hari Ini</span>
-            <span class="text-[10px] font-bold text-cyan-400">Baca Selengkapnya &rarr;</span>
+          <div class="mt-3 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
+            <span id="draft-status" class="text-emerald-400 font-medium">Draf aman</span>
+            <button onclick="clearDraft()" class="text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-[9px] cursor-pointer">Reset Form 🗑️</button>
           </div>
         </div>
+
+        <!-- SMART AI EDITOR TOOLKIT -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+          <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400">Smart AI Editor Toolkit</h3>
+          
+          <button type="button" onclick="aiOptimizeSpelling()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
+            <span class="text-base">✨</span>
+            <div>
+              <p class="font-bold text-white">Merapikan Bahasa & Typo</p>
+              <p class="text-[10px] text-slate-500">Ubah singkatan/tulisan acak jadi bahasa berita baku</p>
+            </div>
+          </button>
+
+          <button type="button" onclick="aiFormatSpecs()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
+            <span class="text-base">📋</span>
+            <div>
+              <p class="font-bold text-white">Auto-Format Spesifikasi</p>
+              <p class="text-[10px] text-slate-500">Ubah teks koma menjadi susunan list poin rapi</p>
+            </div>
+          </button>
+
+          <button type="button" onclick="aiGenerateHeadlines()" class="w-full text-left text-xs bg-slate-950 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-800 transition flex items-center gap-3 cursor-pointer">
+            <span class="text-base">💡</span>
+            <div>
+              <p class="font-bold text-white">Ide Judul Berita (Headline)</p>
+              <p class="text-[10px] text-slate-500">Buat ide judul menarik berdasarkan isi tulisan</p>
+            </div>
+          </button>
+
+          <div id="ai-headline-box" class="hidden p-3 bg-slate-950 border border-cyan-950 rounded-xl space-y-2">
+            <p class="text-[9px] font-black uppercase text-cyan-400">Rekomendasi Judul AI (Klik untuk pakai):</p>
+            <div id="headline-suggestions" class="space-y-1.5 text-[11px] text-slate-300"></div>
+          </div>
+        </div>
+
+        <!-- LIVE CARD PREVIEW -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
+          <h3 class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Live Card Preview</h3>
+          <div class="bg-slate-850 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-[400px]">
+            <div class="flex flex-col flex-grow">
+              <div class="w-full h-44 bg-slate-950 flex items-center justify-center overflow-hidden relative border-b border-slate-700/30">
+                <img id="card-preview-blur" class="absolute inset-0 w-full h-full object-cover opacity-15 blur-md" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500">
+                <img id="card-preview-img" class="max-w-full max-h-full object-contain relative z-10" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500">
+              </div>
+              <div class="p-4 flex-grow">
+                <span id="card-preview-tag" class="text-[10px] font-bold bg-cyan-950/80 text-cyan-400 px-2 py-0.5 rounded border border-cyan-800/30">Gadget</span>
+                <h2 id="card-preview-title" class="text-sm font-bold mt-2 text-white line-clamp-2 leading-snug">Judul Artikel Gadget Kamu...</h2>
+                <p id="card-preview-snippet" class="text-slate-400 text-[11px] mt-1 line-clamp-3 leading-relaxed">Isi berita...</p>
+              </div>
+            </div>
+            <div class="p-4 pt-0 border-t border-slate-700/20 mt-auto flex justify-between items-center h-10">
+              <span class="text-[10px] text-slate-500 font-medium">Hari Ini</span>
+              <span class="text-[10px] font-bold text-cyan-400">Baca Selengkapnya &rarr;</span>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-    </div>
+      <!-- RIGHT CONTENT: CORE PUBLISHER FORM (8 COLS) -->
+      <div class="lg:col-span-8">
+        <form id="article-form" onsubmit="submitArticle(event)" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="space-y-1">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kategori</label>
+              <select id="kategori" onchange="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition cursor-pointer">
+                <option value="Gadget" selected>Gadget</option>
+                <option value="Software">Software</option>
+                <option value="AI & Future">AI & Future</option>
+                <option value="Cybersecurity">Cybersecurity</option>
+                <option value="Game">Game</option>
+              </select>
+            </div>
+            <div class="space-y-1 md:col-span-2">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Link Sumber Referensi (Opsional)</label>
+              <input type="url" id="sumber" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-700" placeholder="https://www.gsmarena.com/xyz">
+            </div>
+          </div>
 
-    <!-- RIGHT CONTENT: FORMUTIR UTAMA (8 COLS) -->
-    <div class="lg:col-span-8">
-      <form id="article-form" onsubmit="submitArticle(event)" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="space-y-1">
-            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kategori</label>
-            <select id="kategori" onchange="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition cursor-pointer">
-              <option value="Gadget" selected>Gadget</option>
-              <option value="Software">Software</option>
-              <option value="AI & Future">AI & Future</option>
-              <option value="Cybersecurity">Cybersecurity</option>
-              <option value="Game">Game</option>
-            </select>
+            <div class="flex justify-between items-center">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">URL Gambar Utama (.jpg / .png)</label>
+              <a href="https://imgbb.com/" target="_blank" class="text-[9px] text-cyan-400 hover:underline font-bold">🌐 Buka ImgBB Upload &rarr;</a>
+            </div>
+            <input type="url" id="gambar" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-cyan-400 focus:outline-none focus:border-cyan-500 transition font-mono placeholder-slate-700" placeholder="https://i.ibb.co/xxxx/gambar.jpg" required>
           </div>
-          <div class="space-y-1 md:col-span-2">
-            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Link Sumber Referensi (Opsional)</label>
-            <input type="url" id="sumber" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-700" placeholder="https://www.gsmarena.com/xyz">
+
+          <div class="space-y-1">
+            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Judul Berita</label>
+            <input type="text" id="judul" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-600" placeholder="Ketik judul info gadget di sini..." required>
           </div>
-        </div>
 
-        <div class="space-y-1">
-          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">URL Gambar Utama (.jpg / .png)</label>
-          <input type="url" id="gambar" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-cyan-400 focus:outline-none focus:border-cyan-500 transition font-mono placeholder-slate-700" placeholder="https://i.ibb.co/xxxx/gambar.jpg" required>
-        </div>
+          <div class="space-y-1">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-1">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Materi Konten Artikel</label>
+              <div class="flex items-center gap-2">
+                <!-- FITUR BARU: LINK SHORTCUT INSTAGRAM DEVICE SQUAD -->
+                <a href="https://www.instagram.com/devicesquad/" target="_blank" class="text-[9px] font-black uppercase tracking-wider bg-slate-950 hover:bg-slate-800 text-pink-400 px-2.5 py-1 rounded border border-slate-800 shadow-sm transition flex items-center gap-1">
+                  📸 IG Device Squad &rarr;
+                </a>
+                <button type="button" onclick="cleanInstagramCaption()" class="text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-2.5 py-1 rounded border border-pink-500/20 shadow-sm transition cursor-pointer">
+                  ✨ Bersihkan Teks IG
+                </button>
+              </div>
+            </div>
+            <textarea id="konten" oninput="syncCardPreview(); trackContentStats();" rows="9" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition leading-relaxed" placeholder="Tulis atau paste materi berita di sini..." required></textarea>
+          </div>
 
-        <div class="space-y-1">
-          <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Judul Berita</label>
-          <input type="text" id="judul" oninput="syncCardPreview()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-cyan-500 transition placeholder-slate-600" placeholder="Ketik judul info gadget di sini..." required>
-        </div>
-
-        <div class="space-y-1">
-          <div class="flex justify-between items-center">
-            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Materi Konten Artikel</label>
-            <button type="button" onclick="cleanInstagramCaption()" class="text-[9px] font-black uppercase tracking-widest bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-2.5 py-1 rounded border border-pink-500/20 shadow-sm transition cursor-pointer">
-              ✨ Bersihkan Teks Instagram
+          <div class="pt-1">
+            <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-widest py-3.5 rounded-xl shadow-lg shadow-cyan-500/10 transition flex items-center justify-center gap-2 cursor-pointer">
+              <span>Publish Ke Portal Live 🚀</span>
             </button>
           </div>
-          <textarea id="konten" oninput="syncCardPreview(); trackContentStats();" rows="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition leading-relaxed" placeholder="Tulis atau paste materi berita di sini..." required></textarea>
-        </div>
 
-        <div class="pt-1">
-          <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-widest py-3.5 rounded-xl shadow-lg shadow-cyan-500/10 transition flex items-center justify-center gap-2 cursor-pointer">
-            <span>Publish Ke Portal Live 🚀</span>
-          </button>
-        </div>
+        </form>
+      </div>
+    </div>
 
-      </form>
+    <!-- PANEL DATABASE RETAILER (DAFTAR ARTIKEL TERBIT) -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+      <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-xs font-black uppercase tracking-wider text-white">Live Database Monitor</h3>
+          <p class="text-[10px] text-slate-500">Daftar artikel terbit yang tersimpan di Google Sheets milikmu</p>
+        </div>
+        <span id="db-count" class="text-xs bg-slate-950 border border-slate-800 px-3 py-1 rounded-full text-cyan-400 font-bold">0 Artikel Terdeteksi</span>
+      </div>
+      
+      <!-- Tabel Monitoring Mini -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800/80 bg-slate-950/40">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-950 text-slate-400 font-bold border-b border-slate-800 text-[10px] uppercase tracking-wider">
+              <th class="p-3">Tanggal</th>
+              <th class="p-3">Kategori</th>
+              <th class="p-3">Judul Berita</th>
+              <th class="p-3">Link Sumber</th>
+            </tr>
+          </thead>
+          <tbody id="db-table-body" class="divide-y divide-slate-900 text-slate-300">
+            <tr>
+              <td colspan="4" class="p-4 text-center text-slate-600 font-medium">Klik tombol "Cek Database Live" di atas untuk memuat data riwayat...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </main>
 
   <footer class="bg-slate-950 border-t border-slate-900 py-3 text-center text-[9px] text-slate-600 tracking-wider">
-    <p>&copy; 2026 Device Squad Control Hub. AI Matrix Core Active.</p>
+    <p>&copy; 2026 Device Squad Control Hub. Database Synchronizer Enabled.</p>
   </footer>
 
   <!-- CORE DASHBOARD LOGIC ENGINE -->
   <script>
     const SECURITY_PIN = "1234"; // Password login admin kamu
+    
     const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     const DRAFT_KEY = "device_squad_draft_content";
 
@@ -182,13 +228,55 @@
       }
     })();
 
-    // 2. AI REWRITER ENGINE (LOKAL JAVASCRIPT DICTIONARY)
+    // 2. MENGAMBIL DATA LANGSUNG DARI GOOGLE SHEETS KE ADMIN (DATABASE READER)
+    async function fetchLiveDatabase() {
+      const tbody = document.getElementById('db-table-body');
+      const countBadge = document.getElementById('db-count');
+      const statusIndicator = document.getElementById('system-status');
+      
+      tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-cyan-400 animate-pulse font-bold">Mengontak Google Sheets... Harap Tunggu...</td></tr>`;
+      statusIndicator.innerText = "READING DATABASE";
+      statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-cyan-400";
+
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        
+        if (data && data.length > 0) {
+          tbody.innerHTML = "";
+          countBadge.innerText = `${data.length} Artikel Terdeteksi`;
+          
+          const reversedData = [...data].reverse();
+
+          reversedData.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-900/60 transition";
+            tr.innerHTML = `
+              <td class="p-3 text-slate-500 font-mono whitespace-nowrap">${item.tanggal || '-'}</td>
+              <td class="p-3"><span class="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 px-2 py-0.5 rounded">${item.kategori || 'Gadget'}</span></td>
+              <td class="p-3 font-bold text-white max-w-xs truncate">${item.judul || 'Tanpa Judul'}</td>
+              <td class="p-3"><a href="${item.sumber}" target="_blank" class="text-cyan-400 hover:underline truncate inline-block max-w-[120px]">${item.sumber !== '#' ? 'Buka Sumber 🔗' : '-'}</a></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Database kosong atau kolom tidak sesuai.</td></tr>`;
+        }
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-400">Gagal memuat database riwayat. Pastikan pengaturan Web App Google Sheets-mu mendukung akses GET (doGet).</td></tr>`;
+      } finally {
+        statusIndicator.innerText = "READY";
+        statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-slate-400";
+      }
+    }
+
+    // 3. AI REWRITER ENGINE
     function aiOptimizeSpelling() {
       const area = document.getElementById('konten');
       let text = area.value;
       if (!text) return alert("Ketik isi materi berita terlebih dahulu!");
 
-      // Kamus perbaikan singkatan & typo lokal ala jurnalis profesional
       const dictionary = {
         " yg ": " yang ", " dngn ": " dengan ", " dgn ": " dengan ", " ttg ": " tentang ",
         " bnyk ": " banyak ", " hp ": " smartphone ", " sdh ": " sudah ", " blm ": " belum ",
@@ -202,23 +290,19 @@
         text = text.replace(regex, dictionary[key]);
       });
 
-      // Menjadikan huruf pertama di awal kalimat otomatis Kapital
       text = text.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-
       area.value = text;
       syncCardPreview();
       trackContentStats();
       saveCurrentDraft();
-      document.getElementById('draft-status').innerText = "Tata bahasa diperbaiki ✨";
     }
 
-    // 3. AI AUTO FORMAT SPECIFICATIONS
+    // 4. AI AUTO FORMAT SPECIFICATIONS
     function aiFormatSpecs() {
       const area = document.getElementById('konten');
       let text = area.value;
       if (!text) return alert("Ketik spesifikasi gadget terlebih dahulu!");
 
-      // Jika teks mengandung koma atau titik koma, pecah jadi baris baru dengan poin peluru
       if (text.includes(",") && !text.includes("•")) {
         let parts = text.split(",");
         text = "Spesifikasi Lengkap:\n" + parts.map(p => `• ${p.trim()}`).join("\n");
@@ -226,18 +310,14 @@
         syncCardPreview();
         trackContentStats();
         saveCurrentDraft();
-        document.getElementById('draft-status').innerText = "Spesifikasi terformat 📋";
-      } else {
-        alert("Format teks tidak memerlukan konversi, atau sudah rapi.");
       }
     }
 
-    // 4. AI HEADLINE GENERATOR
+    // 5. AI HEADLINE GENERATOR
     function aiGenerateHeadlines() {
       const text = document.getElementById('konten').value;
       if (!text) return alert("Tulis konten berita dulu agar AI paham topiknya!");
 
-      // Cari kata kunci utama dari tulisan untuk dijadikan bahan judul
       const words = text.toLowerCase();
       let gadgetBrand = "Smartphone Terbaru";
       
@@ -246,14 +326,12 @@
       else if (words.includes("iphone") || words.includes("apple")) gadgetBrand = "iPhone";
       else if (words.includes("vivo")) gadgetBrand = "Vivo";
       else if (words.includes("oppo")) gadgetBrand = "Oppo";
-      else if (words.includes("realme")) gadgetBrand = "Realme";
 
       let coreFeature = "Bawa Spesifikasi Gahar";
       if (words.includes("baterai") || words.includes("mah")) coreFeature = "Gendong Baterai Jumbo";
       if (words.includes("leica") || words.includes("kamera") || words.includes("mp")) coreFeature = "Sektor Kamera Upgrade Total";
-      if (words.includes("dimensity") || words.includes("snapdragon") || words.includes("chipset")) coreFeature = "Performa Chipset Naik Kelas";
+      if (words.includes("chipset") || words.includes("snapdragon")) coreFeature = "Dapur Pacu Makin Kencang";
 
-      // Racik 3 Variasi Judul Berita Bombastis
       const suggestions = [
         `🔥 Gebrakan Baru! ${gadgetBrand} Resmi Meluncur, ${coreFeature}!`,
         `Siap Gandeng Teknologi Premium, ${gadgetBrand} Akhirnya Hadir di Indonesia`,
@@ -280,7 +358,7 @@
       box.classList.remove('hidden');
     }
 
-    // 5. CLEAN INSTAGRAM CAPTION
+    // 6. CLEAN INSTAGRAM CAPTION
     function cleanInstagramCaption() {
       const area = document.getElementById('konten');
       let text = area.value;
@@ -291,10 +369,9 @@
       syncCardPreview();
       trackContentStats();
       saveCurrentDraft();
-      document.getElementById('draft-status').innerText = "Teks IG bersih!";
     }
 
-    // 6. LIVE CARD PREVIEW
+    // 7. LIVE CARD PREVIEW
     function syncCardPreview() {
       const fallback = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
       const kat = document.getElementById('kategori').value;
@@ -304,7 +381,7 @@
 
       document.getElementById('card-preview-tag').innerText = kat;
       document.getElementById('card-preview-title').innerText = jud ? jud : "Judul Artikel Gadget Kamu...";
-      document.getElementById('card-preview-snippet').innerText = kon ? kon.replace(/<[^>]*>/g, '') : "Isi berita...";
+      document.getElementById('card-preview-snippet').innerText = kon ? kon.replace(/<[^>]*>/g, '') : "Potongan ringkasan materi berita...";
 
       const targetImg = imgUrl ? imgUrl : fallback;
       const blurImg = document.getElementById('card-preview-blur');
@@ -319,7 +396,7 @@
       };
     }
 
-    // 7. AUTO WORKSPACE STATE & DRAFT
+    // 8. AUTO WORKSPACE STATE & DRAFT
     window.onload = function() {
       const savedDraft = localStorage.getItem(DRAFT_KEY);
       if (savedDraft) {
@@ -370,7 +447,7 @@
       document.getElementById('read-time').innerText = text.length > 0 ? `${readTime}m` : "0m";
     }
 
-    // 8. DATA TRANSMISSION ENGINE
+    // 9. DATA TRANSMISSION ENGINE
     async function submitArticle(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submit-btn');
@@ -415,6 +492,8 @@
         trackContentStats();
         statusIndicator.innerText = "READY";
         statusIndicator.className = "text-[10px] font-bold uppercase tracking-wider text-slate-400";
+        
+        fetchLiveDatabase();
       } catch (error) {
         alert(`Error: ${error.message}`);
       } finally {
