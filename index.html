@@ -94,10 +94,14 @@
     <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl flex flex-col" onclick="event.stopPropagation()">
       
       <!-- Modal Header Gambar -->
-      <div class="relative min-h-48 bg-slate-900">
-        <img id="modal-img" class="w-full h-64 object-cover" src="" alt="Cover">
-        <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-950/70 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer">✕</button>
-      </div>
+      <!-- KODE BARU -->
+<div class="relative bg-slate-950 flex items-center justify-center overflow-hidden max-h-[50vh]">
+  <!-- Background blur di belakang gambar agar estetik -->
+  <img id="modal-img-blur" class="absolute inset-0 w-full h-full object-cover opacity-25 blur-lg" src="">
+  <!-- Gambar utama 4:5 yang berdiri tegak tanpa terpotong -->
+  <img id="modal-img" class="max-w-full max-h-[50vh] object-contain relative z-10" src="" alt="Cover">
+  <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-950/80 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer z-20">✕</button>
+</div>
 
       <!-- Modal Konten Teks -->
       <div class="p-6 overflow-y-auto">
@@ -289,6 +293,7 @@
       // Menggunakan innerHTML agar tag gambar kustom di dalam konten Xiaomi kamu bisa meledak/tampil rapi di dalam modal
       document.getElementById('modal-content').innerHTML = art.konten || ''; 
       document.getElementById('modal-img').src = art.gambar || fallbackImg;
+      document.getElementById('modal-img-blur').src = art.gambar || fallbackImg;
       
       const sourceLinkElement = document.getElementById('modal-source-link');
       if (art.sumber && art.sumber !== "#" && art.sumber.trim() !== "") {
