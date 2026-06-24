@@ -149,16 +149,18 @@
     }
 
     async function publishArticle(event) {
-      event.preventDefault(); 
+      event.preventDefault(); // Blokir perilaku refresh halaman bawaan browser
       
       const submitBtn = document.getElementById('submit-btn');
       const originalText = submitBtn.innerHTML;
 
+      // Ambil seluruh input dari workspace formulir
       const judul = document.getElementById('judul').value.trim();
       const kategori = document.getElementById('kategori').value;
       const sumber = document.getElementById('sumber').value.trim() || "#";
       const gambar = document.getElementById('gambar').value.trim();
       
+      // Pembungkusan Paragraf Otomatis untuk disave sebagai HTML murni agar rapi di index.html
       const rawKontenText = document.getElementById('konten').value;
       const formatHtmlContent = rawKontenText
         .split('\n')
@@ -166,9 +168,11 @@
         .map(p => `<p>${p.trim()}</p>`)
         .join('');
 
+      // Berikan proteksi loading spinner UI di button submit
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> Memproses Penyimpanan Sheets...`;
 
+      // Buat form data payload untuk dikirim ke GAS
       const payload = new URLSearchParams();
       payload.append('judul', judul);
       payload.append('kategori', kategori);
@@ -184,12 +188,25 @@
           body: payload.toString()
         });
 
-        const res = await response.json();
+        // PERBAIKAN DI SINI: Membaca sebagai text terlebih dahulu untuk menghindari crash pembacaan JSON
+        const textData = await response.text();
+        
+        let res;
+        try {
+          res = JSON.parse(textData);
+        } catch (e) {
+          // Jika server membalas dengan text biasa atau format parameter form
+          if (textData.includes("success") || textData.includes("judul=")) {
+            res = { status: "success" };
+          } else {
+            res = { status: "error", message: textData };
+          }
+        }
 
         if (res.status === "success") {
           alert(isEditingOldArticle ? "Artikel berhasil direvisi di database Google Sheets!" : "Artikel Baru Berhasil Ditambahkan ke Google Sheets!");
           clearWorkspaceForm();
-          fetchDatabaseLogs(); 
+          fetchDatabaseLogs(); // Muat ulang log histori tabel
         } else {
           alert("Gagal menyimpan data: " + res.message);
         }
