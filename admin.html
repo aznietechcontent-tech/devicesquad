@@ -208,6 +208,7 @@
     }
 
     // TAMPILKAN LOG: Memastikan artikel terbaru selalu berada di urutan paling atas
+    // TAMPILKAN LOG: Memaksa artikel dengan ID terbesar/terbaru selalu di atas
     async function fetchDatabaseLogs() {
       const logsList = document.getElementById('database-logs-list');
       logsList.innerHTML = `<p class="text-xs text-gray-400 font-light text-center py-4"><i class="fas fa-spinner animate-spin"></i> Menghubungkan ke server...</p>`;
@@ -223,9 +224,11 @@
         
         logsList.innerHTML = "";
         
-        // Karena backend GAS Anda sudah melakukan .reverse(), di sini kita tinggal langsung tampilkan apa adanya 
-        // agar data yang baru masuk otomatis bertengger di posisi paling atas daftar.
-        arrayData.forEach((item) => {
+        // AMAN & PASTI: Urutkan data berdasarkan ID secara descending (ID terbesar/terbaru pasti di atas)
+        // Ini akan mengoreksi urutan tidak peduli bagaimana Google Script mengirim datanya.
+        const riwayatUrut = arrayData.sort((a, b) => Number(b.id) - Number(a.id));
+
+        riwayatUrut.forEach((item) => {
           const logRow = document.createElement('div');
           logRow.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center gap-3 hover:bg-blue-50/40 transition-colors";
           
@@ -248,7 +251,6 @@
         logsList.innerHTML = `<p class="text-xs text-rose-500 font-light text-center py-4">Gagal memuat log data.</p>`;
       }
     }
-
     function loadArticleToWorkspace(id, kategori, sumber, gambar, judul, kontenEscaped) {
       if (confirm(`Muat kembali artikel "${judul}" ke workspace?`)) {
         isEditingOldArticle = true; 
