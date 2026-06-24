@@ -127,50 +127,45 @@
     </div>
   </footer>
 
-  <script>
+ <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     let globalArticles = [];
     let currentCategoryFilter = "Semua";
 
-    async function fetchArticles() {
-  const container = document.getElementById('articles-container'); // Sesuaikan dengan ID container Anda
-  container.innerHTML = `<p>Memuat artikel...</p>`;
+    // FIX UTAMA: Mengambil data dan mengurutkannya berdasarkan ID terbesar (Terbaru)
+    async function loadArticles() {
+      const container = document.getElementById('articles-container');
+      const badge = document.getElementById('total-articles-badge');
+      container.innerHTML = `
+        <div class="col-span-full text-center py-12 text-gray-400 text-sm font-light">
+          <i class="fas fa-spinner animate-spin text-xl mb-2 text-blue-600"></i>
+          <p>Sinkronisasi database Google Sheets...</p>
+        </div>`;
+      
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=read`);
+        const arrayData = await response.json();
 
-  try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec?action=read");
-    const arrayData = await response.json();
+        if (!Array.isArray(arrayData) || arrayData.length === 0) {
+          container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Belum ada artikel di database.</div>`;
+          badge.innerText = "0 artikel tersedia";
+          return;
+        }
 
-    if (!Array.isArray(arrayData) || arrayData.length === 0) {
-      container.innerHTML = `<p>Belum ada artikel.</p>`;
-      return;
+        // KUNCI URUTAN: Urutkan data berdasarkan ID secara Descending (ID terbesar/terbaru wajib di atas)
+        globalArticles = arrayData.sort((a, b) => Number(b.id) - Number(a.id));
+        
+        // Render data ke tampilan komputer & HP
+        renderArticles();
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<div class="col-span-full text-center py-12 text-rose-500">Gagal terhubung dengan server database.</div>`;
+        badge.innerText = "Gagal memuat";
+      }
     }
 
-    container.innerHTML = "";
-
-    // KUNCI PERBAIKAN: Paksa urutkan ID terbesar/terbaru berada di atas
-    const artikelTerbaru = arrayData.sort((a, b) => Number(b.id) - Number(a.id));
-
-    // Lakukan perulangan untuk menampilkan artikel ke HTML
-    artikelTerbaru.forEach((item) => {
-      const articleCard = document.createElement('div');
-      
-      // ... (Kode struktur tampilan card artikel Anda di sini, sesuaikan dengan kode asli Anda) ...
-      articleCard.innerHTML = `
-        <img src="${item.gambar}" alt="${item.judul}">
-        <h3>${item.judul}</h3>
-        <p>${item.kategori}</p>
-      `;
-      
-      // Gunakan appendChild seperti biasa karena datanya sudah diurutkan dengan benar di atas
-      container.appendChild(articleCard);
-    });
-
-  } catch (err) {
-    console.error(err);
-    container.innerHTML = `<p>Gagal memuat artikel.</p>`;
-  }
-}
-
+    // FIX RENDER: Menampilkan data secara dinamis berdasarkan filter & pencarian tanpa merusak urutan terbaru
     function renderArticles() {
       const container = document.getElementById('articles-container');
       const emptyState = document.getElementById('empty-state');
@@ -236,7 +231,7 @@
             </div>
           </div>
         `;
-        container.appendChild(card);
+        container.appendChild(card); // Tetap appendChild karena susunan array globalArticles sudah di-sort turun di atas
       });
     }
 
@@ -300,6 +295,7 @@
     document.getElementById('search-input-mobile')?.addEventListener('input', renderArticles);
     document.getElementById('article-modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
+    // Jalankan loadArticles saat halaman dibuka pertama kali
     window.addEventListener('DOMContentLoaded', loadArticles);
   </script>
 </body>
