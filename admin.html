@@ -128,6 +128,7 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     
     let isEditingOldArticle = false;
+    let currentEditingId = null;
 
     function syncCardPreview() {
       const judul = document.getElementById('judul').value || "Judul Artikel Baru";
@@ -148,7 +149,7 @@
       document.getElementById('character-counter').innerText = `${chars} karakter | ${words} kata`;
     }
 
-    // FIX AMAN: Fungsi POST Adaptif untuk Teks Mentah
+    // KIRIM DATA: Menggunakan Format JSON murni agar sinkron dengan doPost Google Sheets Anda
     async function publishArticle(event) {
       event.preventDefault(); 
       
@@ -170,39 +171,32 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> Memproses Penyimpanan Sheets...`;
 
-      const payload = new URLSearchParams();
-      payload.append('judul', judul);
-      payload.append('kategori', kategori);
-      payload.append('sumber', sumber);
-      payload.append('gambar', gambar);
-      payload.append('konten', formatHtmlContent);
-      payload.append('tanggal', new Date().toISOString());
+      const jsonPayload = {
+        password: "devicequadsukses",
+        action: isEditingOldArticle ? "edit" : "add",
+        id: isEditingOldArticle ? currentEditingId : null,
+        judul: judul,
+        kategori: kategori,
+        sumber: sumber,
+        gambar: gambar,
+        konten: formatHtmlContent
+      };
 
       try {
         const response = await fetch(SCRIPT_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: payload.toString()
+          headers: { "Content-Type": "text/plain" }, 
+          body: JSON.stringify(jsonPayload)
         });
 
-        const textData = await response.text();
-        let res = { status: "error" };
-
-        if (textData.includes("success") || textData.includes("judul=")) {
-          res = { status: "success" };
-        } else {
-          try {
-            const parsed = JSON.parse(textData);
-            if (parsed.status === "success") res = { status: "success" };
-          } catch(e) {}
-        }
+        const res = await response.json();
 
         if (res.status === "success") {
-          alert(isEditingOldArticle ? "Artikel berhasil direvisi di database Google Sheets!" : "Artikel Baru Berhasil Ditambahkan ke Google Sheets!");
+          alert(res.message);
           clearWorkspaceForm();
-          fetchDatabaseLogs(); 
+          fetchDatabaseLogs(); // Otomatis refresh daftar riwayat
         } else {
-          alert("Gagal menyimpan data: " + textData);
+          alert("Gagal menyimpan data: " + res.message);
         }
       } catch (err) {
         console.error(err);
@@ -213,39 +207,25 @@
       }
     }
 
-    // FIX AMAN: Fungsi GET Adaptif untuk Parsing Log Riwayat Parameter Form
+    // TAMPILKAN LOG: Memastikan artikel terbaru selalu berada di urutan paling atas
     async function fetchDatabaseLogs() {
       const logsList = document.getElementById('database-logs-list');
       logsList.innerHTML = `<p class="text-xs text-gray-400 font-light text-center py-4"><i class="fas fa-spinner animate-spin"></i> Menghubungkan ke server...</p>`;
       
       try {
         const response = await fetch(`${SCRIPT_URL}?action=read`);
-        const textData = await response.text();
-        
-        let arrayData = [];
-        
-        // Coba parse sebagai JSON biasa dulu
-        try {
-          const parsed = JSON.parse(textData);
-          arrayData = Array.isArray(parsed) ? parsed : (parsed.data || []);
-        } catch (e) {
-          // Jika gagal JSON, parse manual format teks URL-encoded (judul=...&kategori=...)
-          const urlParams = new URLSearchParams(textData);
-          const obj = Object.fromEntries(urlParams.entries());
-          if (obj.judul) {
-            arrayData = [obj];
-          }
-        }
+        const arrayData = await response.json();
 
-        if (arrayData.length === 0) {
+        if (!Array.isArray(arrayData) || arrayData.length === 0) {
           logsList.innerHTML = `<p class="text-xs text-gray-400 font-light text-center py-4">Database kosong atau format tidak terbaca.</p>`;
           return;
         }
         
         logsList.innerHTML = "";
-        const riwayatTerbalik = [...arrayData].reverse();
-
-        riwayatTerbalik.forEach((item) => {
+        
+        // Karena backend GAS Anda sudah melakukan .reverse(), di sini kita tinggal langsung tampilkan apa adanya 
+        // agar data yang baru masuk otomatis bertengger di posisi paling atas daftar.
+        arrayData.forEach((item) => {
           const logRow = document.createElement('div');
           logRow.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center gap-3 hover:bg-blue-50/40 transition-colors";
           
@@ -257,7 +237,7 @@
               <p class="text-xs font-bold text-gray-900 line-clamp-2 mb-0.5">${item.judul || 'Tanpa Judul'}</p>
               <p class="text-[10px] text-gray-400 font-medium"><span class="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${item.kategori || 'Gadget'}</span></p>
             </div>
-            <button onclick="loadArticleToWorkspace('${item.kategori || ''}', '${item.sumber || ''}', '${item.gambar || ''}', '${item.judul || ''}', ${dataEscaped})" class="bg-white hover:bg-blue-600 text-blue-600 hover:text-white border border-gray-200 hover:border-blue-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg shadow-sm transition-all flex-shrink-0 flex items-center gap-1">
+            <button onclick="loadArticleToWorkspace('${item.id || ''}', '${item.kategori || ''}', '${item.sumber || ''}', '${item.gambar || ''}', '${item.judul || ''}', ${dataEscaped})" class="bg-white hover:bg-blue-600 text-blue-600 hover:text-white border border-gray-200 hover:border-blue-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg shadow-sm transition-all flex-shrink-0 flex items-center gap-1">
               Edit 📝
             </button>
           `;
@@ -269,9 +249,10 @@
       }
     }
 
-    function loadArticleToWorkspace(kategori, sumber, gambar, judul, kontenEscaped) {
+    function loadArticleToWorkspace(id, kategori, sumber, gambar, judul, kontenEscaped) {
       if (confirm(`Muat kembali artikel "${judul}" ke workspace?`)) {
         isEditingOldArticle = true; 
+        currentEditingId = id; // Simpan ID target untuk dikirim ke mode edit
         document.getElementById('edit-indicator-badge').classList.remove('hidden');
 
         let doc = new DOMParser().parseFromString(kontenEscaped, "text/html");
@@ -305,6 +286,7 @@
       document.getElementById('konten').value = "";
       
       isEditingOldArticle = false;
+      currentEditingId = null;
       document.getElementById('edit-indicator-badge').classList.add('hidden');
       
       syncCardPreview();
@@ -319,7 +301,8 @@
         sumber: document.getElementById('sumber').value,
         gambar: document.getElementById('gambar').value,
         konten: document.getElementById('konten').value,
-        isEditingOldArticle: isEditingOldArticle
+        isEditingOldArticle: isEditingOldArticle,
+        currentEditingId: currentEditingId
       };
       localStorage.setItem('cms_workspace_draft', JSON.stringify(draft));
     }
@@ -335,6 +318,7 @@
           document.getElementById('gambar').value = draft.gambar || "";
           document.getElementById('konten').value = draft.konten || "";
           isEditingOldArticle = draft.isEditingOldArticle || false;
+          currentEditingId = draft.currentEditingId || null;
           
           if (isEditingOldArticle) {
             document.getElementById('edit-indicator-badge').classList.remove('hidden');
