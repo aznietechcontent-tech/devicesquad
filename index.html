@@ -24,7 +24,7 @@
 
   <!-- TOP BAR & NAVIGATION -->
   <header class="bg-white shadow-sm sticky top-0 z-40">
-    <div class="max-w-7xl x-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
         <!-- Logo -->
         <div class="flex items-center gap-2">
@@ -96,46 +96,7 @@
 
     <!-- ARTICLES GRID -->
     <div id="articles-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Loading Skeleton Templates -->
-      <div class="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse border border-gray-100">
-        <div class="bg-gray-200 h-48 w-full"></div>
-        <div class="p-5 flex flex-col gap-3">
-          <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-          <div class="h-6 bg-gray-200 rounded w-full mt-1"></div>
-          <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
-          <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
-            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse border border-gray-100">
-        <div class="bg-gray-200 h-48 w-full"></div>
-        <div class="p-5 flex flex-col gap-3">
-          <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-          <div class="h-6 bg-gray-200 rounded w-full mt-1"></div>
-          <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
-          <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
-            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse border border-gray-100">
-        <div class="bg-gray-200 h-48 w-full"></div>
-        <div class="p-5 flex flex-col gap-3">
-          <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-          <div class="h-6 bg-gray-200 rounded w-full mt-1"></div>
-          <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
-          <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
-            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-          </div>
-        </div>
-      </div>
+      <!-- Loading Skeletons -->
     </div>
 
     <!-- EMPTY DATA STATE -->
@@ -151,37 +112,24 @@
   <!-- MODAL BACA ARTIKEL -->
   <div id="article-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-300 transform" id="modal-content-wrapper">
-      <!-- Modal Header Banner -->
       <div class="relative h-56 md:h-64 w-full bg-gray-100 flex-shrink-0">
         <img id="modal-image" src="" alt="Gambar Artikel" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-        
-        <!-- Close Button -->
-        <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none">
+        <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors">
           <i class="fas fa-times"></i>
         </button>
-
-        <!-- Category Tag Overlay -->
         <span id="modal-category" class="absolute bottom-4 left-5 bg-blue-600 text-white text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm">Kategori</span>
       </div>
 
-      <!-- Modal Body (Scrollable Text) -->
       <div class="p-6 overflow-y-auto flex-grow text-gray-700 leading-relaxed space-y-4">
         <h2 id="modal-title" class="text-xl md:text-2xl font-bold text-gray-900 leading-snug">Judul Artikel Lengkap</h2>
-        
-        <!-- Meta Info -->
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 pt-1 pb-3 border-b border-gray-100">
           <span class="flex items-center gap-1"><i class="far fa-calendar-alt"></i> <span id="modal-date">Tanggal</span></span>
           <span class="flex items-center gap-1"><i class="fas fa-link"></i> <a id="modal-source" href="#" target="_blank" class="text-blue-600 hover:underline">Lihat Sumber Asli</a></span>
         </div>
-
-        <!-- Main Text Content -->
-        <div id="modal-text" class="text-sm md:text-base font-normal text-gray-600 space-y-3 pt-2">
-          <!-- Paragraf konten diisi dinamis oleh JS -->
-        </div>
+        <div id="modal-text" class="text-sm md:text-base font-normal text-gray-600 space-y-3 pt-2"></div>
       </div>
 
-      <!-- Modal Footer -->
       <div class="p-4 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
         <button onclick="closeModal()" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl text-sm font-medium transition-colors">Tutup</button>
       </div>
@@ -192,39 +140,40 @@
   <footer class="bg-gray-900 text-gray-400 text-sm py-6 mt-12 border-t border-gray-800">
     <div class="max-w-7xl mx-auto px-4 text-center flex flex-col sm:flex-row justify-between items-center gap-3">
       <p>&copy; 2026 <span class="text-white font-medium">Device Squad</span>. All rights reserved.</p>
-      <div class="flex gap-4 text-xs">
-        <a href="#" class="hover:text-white transition-colors">Tentang Kami</a>
-        <a href="#" class="hover:text-white transition-colors">Kebijakan Privasi</a>
-        <a href="#" class="hover:text-white transition-colors">Kontak</a>
-      </div>
     </div>
   </footer>
 
-  <!-- CORE APPS ARCHITECTURE JAVASCRIPT -->
   <script>
-    // URL Web App Google Apps Script Anda yang terpusat
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
-    
-    // State penyimpanan data lokal aplikasi runtime
     let globalArticles = [];
     let currentCategoryFilter = "Semua";
 
-    // Fungsi fetch data utama dari database Sheets via API
     async function loadArticles() {
       const container = document.getElementById('articles-container');
       const emptyState = document.getElementById('empty-state');
       const badge = document.getElementById('total-articles-badge');
 
-      try {
-        const response = await fetch(`${SCRIPT_URL}?action=read`);
-        const result = await response.json();
+      container.innerHTML = `<p class="text-center text-gray-500 py-8 col-span-3">Menghubungkan ke database...</p>`;
 
-        if (result.status === "success" && Array.isArray(result.data)) {
-          // Balik urutan agar artikel terbaru muncul di paling atas
-          globalArticles = result.data.reverse();
+      try {
+        // PERBAIKAN UTAMA: Mencoba fetch dengan parameter action, jika gagal/kosong, coba fetch tanpa parameter
+        let response = await fetch(`${SCRIPT_URL}?action=read`);
+        let result = await response.json();
+
+        // Jika respons bukan sukses format standar, lakukan fallback fetch langsung tanpa parameter
+        if (!result || result.status !== "success") {
+          response = await fetch(SCRIPT_URL);
+          result = await response.json();
+        }
+
+        // Penanganan jika data berupa array langsung atau berada di dalam property .data
+        let rawData = Array.isArray(result) ? result : (result.data || []);
+
+        if (Array.isArray(rawData)) {
+          globalArticles = rawData.reverse();
           renderArticles();
         } else {
-          throw new Error("Format respons data salah");
+          throw new Error("Struktur data tidak dikenal");
         }
       } catch (error) {
         console.error("Gagal memuat artikel:", error);
@@ -234,25 +183,29 @@
       }
     }
 
-    // Fungsi render komponen card HTML ke halaman web secara dinamis
     function renderArticles() {
       const container = document.getElementById('articles-container');
       const emptyState = document.getElementById('empty-state');
       const badge = document.getElementById('total-articles-badge');
       
-      // Ambil nilai filter kata kunci dari kolom pencarian (baik desktop maupun mobile)
-      const inputCari = document.getElementById('search-input') || document.querySelector('input[placeholder*="Cari"]');
+      const inputCari = document.getElementById('search-input');
       const inputMobile = document.getElementById('search-input-mobile');
       const searchKeyword = (inputCari ? inputCari.value.toLowerCase() : "") || (inputMobile ? inputMobile.value.toLowerCase() : "");
 
-      // Proses filter ganda: Berdasarkan Kategori DAN Kata Kunci Judul/Konten
       const filtered = globalArticles.filter(item => {
-        const matchCategory = (currentCategoryFilter === "Semua" || item.kategori === currentCategoryFilter);
-        const matchKeyword = item.judul.toLowerCase().includes(searchKeyword) || item.konten.toLowerCase().includes(searchKeyword);
+        // PERBAIKAN KATEGORI: Dibuat case-insensitive agar tidak sensitif huruf besar/kecil
+        const itemKategori = item.kategori ? item.kategori.trim().toLowerCase() : "";
+        const filterKategori = currentCategoryFilter.toLowerCase();
+        
+        const matchCategory = (currentCategoryFilter === "Semua" || itemKategori === filterKategori);
+        
+        const judul = item.judul ? item.judul.toLowerCase() : "";
+        const konten = item.konten ? item.konten.toLowerCase() : "";
+        const matchKeyword = judul.includes(searchKeyword) || konten.includes(searchKeyword);
+        
         return matchCategory && matchKeyword;
       });
 
-      // Bersihkan container dari kerangka loading skeleton lama
       container.innerHTML = "";
 
       if (filtered.length === 0) {
@@ -264,14 +217,12 @@
       emptyState.classList.add('hidden');
       badge.innerText = `${filtered.length} artikel tersedia`;
 
-      // Iterasi data untuk menyusun komponen kartu
       filtered.forEach((article) => {
         const imageSrc = article.gambar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80";
         const dateFormatted = formatDate(article.tanggal);
         
-        // Buat elemen pembungkus teks murni tanpa tag HTML untuk cuplikan deskripsi pendek card
         let tempDiv = document.createElement('div');
-        tempDiv.innerHTML = article.konten;
+        tempDiv.innerHTML = article.konten || "";
         const plainTextContent = tempDiv.textContent || tempDiv.innerText || "";
 
         const card = document.createElement('div');
@@ -279,11 +230,11 @@
         card.innerHTML = `
           <div class="relative h-48 bg-gray-100 overflow-hidden">
             <img src="${imageSrc}" alt="${article.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm">${article.kategori}</span>
+            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm">${article.kategori || 'Gadget'}</span>
           </div>
           <div class="p-5 flex flex-col flex-grow">
             <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-base leading-snug mb-2 cursor-pointer" onclick="openModal(${JSON.stringify(article).replace(/"/g, '&quot;')})">
-              ${article.judul}
+              ${article.judul || 'Tanpa Judul'}
             </h3>
             <p class="text-gray-500 text-xs md:text-sm line-clamp-3 font-light mb-4 flex-grow">
               ${plainTextContent}
@@ -302,14 +253,13 @@
       });
     }
 
-    // Fungsi interaktif membuka jendela detail modal baca artikel
     function openModal(article) {
       const modal = document.getElementById('article-modal');
       const wrapper = document.getElementById('modal-content-wrapper');
 
       document.getElementById('modal-image').src = article.gambar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80";
-      document.getElementById('modal-category').innerText = article.kategori;
-      document.getElementById('modal-title').innerText = article.judul;
+      document.getElementById('modal-category').innerText = article.kategori || "Gadget";
+      document.getElementById('modal-title').innerText = article.judul || "Tanpa Judul";
       document.getElementById('modal-date').innerText = formatDate(article.tanggal);
       
       const sourceLink = document.getElementById('modal-source');
@@ -320,38 +270,26 @@
         sourceLink.parentElement.classList.add('hidden');
       }
 
-      // Memasukkan konten teks artikel
-      const textContainer = document.getElementById('modal-text');
-      textContainer.innerHTML = article.konten;
+      document.getElementById('modal-text').innerHTML = article.konten || "";
 
-      // Animasi transisi CSS memunculkan jendela modal
       modal.classList.remove('hidden');
       setTimeout(() => {
         wrapper.classList.remove('scale-95', 'opacity-0');
         wrapper.classList.add('scale-100', 'opacity-100');
       }, 20);
-      document.body.style.overflow = 'hidden'; // Kunci scroll layar belakang
+      document.body.style.overflow = 'hidden';
     }
 
-    // Fungsi menutup jendela modal baca artikel
     function closeModal() {
       const modal = document.getElementById('article-modal');
       const wrapper = document.getElementById('modal-content-wrapper');
-
       wrapper.classList.remove('scale-100', 'opacity-100');
       wrapper.classList.add('scale-95', 'opacity-0');
-      
-      setTimeout(() => {
-        modal.classList.add('hidden');
-        document.body.style.overflow = ''; // Aktifkan kembali scroll utama
-      }, 250);
+      setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 250);
     }
 
-    // Sistem penapis Tab Kategori aktif
     function filterCategory(categoryName) {
       currentCategoryFilter = categoryName;
-      
-      // Mutasi style visual tombol tab aktif dan tidak aktif
       document.querySelectorAll('.category-btn').forEach(btn => {
         if (btn.getAttribute('data-category') === categoryName) {
           btn.className = "category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-blue-600 text-white shadow-md shadow-blue-100";
@@ -359,50 +297,22 @@
           btn.className = "category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200";
         }
       });
-
       renderArticles();
     }
 
-    // Utilitas format tanggal ISO/String ke format lokal bahasa Indonesia
     function formatDate(dateString) {
       if (!dateString) return "-";
       try {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return dateString; 
         return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-      } catch (e) {
-        return dateString;
-      }
+      } catch (e) { return dateString; }
     }
 
-    // Event Listener real-time pencarian teks
     document.getElementById('search-input')?.addEventListener('input', renderArticles);
     document.getElementById('search-input-mobile')?.addEventListener('input', renderArticles);
+    document.getElementById('article-modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-    // Menutup modal otomatis jika area hitam di luar box diklik pengguna
-    document.getElementById('article-modal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-
-    // --- BAGIAN PERBAIKAN UNTUK MEMBENTENGi ERROR VALUE ---
-    // Mengamankan pemanggilan loadArticles agar tidak crash saat mencari elemen input
-    const originalLoadArticles = loadArticles;
-    loadArticles = function() {
-      // PERBAIKAN: Mengubah pencarian ke 'search-input' sesuai ID elemen di HTML atas
-      const inputCari = document.getElementById('search-input') || document.querySelector('input[placeholder*="Cari"]');
-      
-      // Jika ditemukan tetapi belum punya ID yang benar, kita suntikkan ID secara otomatis
-      if (inputCari && !document.getElementById('search-input')) {
-        inputCari.id = 'search-input';
-      }
-      
-      // Jalankan fungsi pemuatan asli dengan aman
-      if (typeof originalLoadArticles === 'function') {
-        originalLoadArticles();
-      }
-    };
-
-    // Menjalankan fungsi utama setelah seluruh dokumen selesai dimuat browser
     window.addEventListener('DOMContentLoaded', loadArticles);
   </script>
 </body>
