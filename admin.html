@@ -14,7 +14,6 @@
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
-  <!-- NAVBAR NAVIGATION BAR -->
   <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
@@ -29,10 +28,8 @@
     </div>
   </header>
 
-  <!-- CONTROL CONTENT MANAGEMENT PANEL -->
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
     
-    <!-- LEFT INPUT COLUMN: FORM EDITOR (7 COLS) -->
     <div class="lg:col-span-7 space-y-6">
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6" id="article-form">
         <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-5">
@@ -46,14 +43,12 @@
         </div>
 
         <form onsubmit="publishArticle(event)" class="space-y-4">
-          <!-- Judul Input -->
           <div>
             <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Judul Utama Artikel</label>
             <input type="text" id="judul" required placeholder="Contoh: Review Xiaomi 14 Ultra Indonesia" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-medium">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Kategori Select -->
             <div>
               <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Kategori Konten</label>
               <select id="kategori" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-medium">
@@ -63,20 +58,17 @@
                 <option value="Tutorial">Tutorial</option>
               </select>
             </div>
-            <!-- Sumber Link Input -->
             <div>
               <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">URL Sumber/Referensi (Opsional)</label>
               <input type="url" id="sumber" placeholder="https://example.com/sumber-asli" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
             </div>
           </div>
 
-          <!-- Cover Image Gambar URL Input -->
           <div>
             <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">URL Gambar Cover Utama</label>
             <input type="url" id="gambar" placeholder="https://images.unsplash.com/photo-..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
           </div>
 
-          <!-- Konten Textarea Area Utama -->
           <div>
             <div class="flex justify-between items-center mb-1">
               <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">Isi Materi Pembahasan Lengkap</label>
@@ -85,7 +77,6 @@
             <textarea id="konten" required rows="9" placeholder="Tulis rincian review gadget atau tutorial di sini..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all leading-relaxed font-light"></textarea>
           </div>
 
-          <!-- Tombol Eksekusi Aksi Form -->
           <div class="flex gap-3 pt-2">
             <button type="submit" id="submit-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl text-sm transition-all shadow-md shadow-blue-100 flex items-center justify-center gap-2">
               <i class="fas fa-paper-plane"></i> <span>Kirim Artikel & Sinkronisasi</span>
@@ -98,17 +89,17 @@
       </div>
     </div>
 
-    <!-- RIGHT PREVIEW COLUMN: REALTIME PREVIEW CARDS (5 COLS) -->
     <div class="lg:col-span-5 space-y-6">
-      <!-- Live Card Preview -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-1.5"><i class="fas fa-eye text-emerald-500"></i> Tampilan Realtime Live Card Preview</h3>
         <div class="bg-gray-50 p-4 rounded-xl border border-dashed border-gray-200 flex justify-center">
           <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 w-full max-w-sm flex flex-col">
-            <div class="relative h-44 bg-slate-200 overflow-hidden">
-              <img id="preview-image" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover">
+            
+            <div class="relative h-44 bg-slate-900 overflow-hidden flex items-center justify-center">
+              <img id="preview-image" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-contain">
               <span id="preview-category" class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm">Gadget</span>
             </div>
+            
             <div class="p-5 flex flex-col flex-grow">
               <h4 id="preview-judul" class="font-bold text-gray-900 line-clamp-2 text-base leading-snug mb-2">Judul Artikel Baru</h4>
               <p id="preview-konten" class="text-gray-500 text-xs font-light line-clamp-2 mb-4">Isi cuplikan ringkasan teks deskripsi artikel yang Anda input otomatis ter-render sinkron di sini secara berkala...</p>
@@ -121,7 +112,6 @@
         </div>
       </div>
 
-      <!-- Logs History Cache Data Base Terakhir -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
         <div class="flex justify-between items-center mb-3">
           <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5"><i class="fas fa-history text-indigo-500"></i> Log Riwayat Data Terposting</h3>
@@ -134,14 +124,11 @@
     </div>
   </main>
 
-  <!-- JAVASCRIPT CMS MANAGEMENT SCRIPT -->
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     
-    // Status flag pengaman untuk membedakan kiriman baru vs revisi data lama
     let isEditingOldArticle = false;
 
-    // Sinkronisasi Live Preview Card
     function syncCardPreview() {
       const judul = document.getElementById('judul').value || "Judul Artikel Baru";
       const kategori = document.getElementById('kategori').value;
@@ -154,7 +141,6 @@
       document.getElementById('preview-konten').innerText = konten;
     }
 
-    // Melacak jumlah karakter dan kata dalam form input textarea secara presisi
     function trackContentStats() {
       const txt = document.getElementById('konten').value;
       const chars = txt.length;
@@ -162,20 +148,17 @@
       document.getElementById('character-counter').innerText = `${chars} karakter | ${words} kata`;
     }
 
-    // Fungsi Pengirim Data (POST) menuju Google Apps Script API Database
     async function publishArticle(event) {
-      event.preventDefault(); // Blokir perilaku refresh halaman bawaan browser
+      event.preventDefault(); 
       
       const submitBtn = document.getElementById('submit-btn');
       const originalText = submitBtn.innerHTML;
 
-      // Ambil seluruh input dari workspace formulir
       const judul = document.getElementById('judul').value.trim();
       const kategori = document.getElementById('kategori').value;
       const sumber = document.getElementById('sumber').value.trim() || "#";
       const gambar = document.getElementById('gambar').value.trim();
       
-      // Pembungkusan Paragraf Otomatis untuk disave sebagai HTML murni agar rapi di index.html
       const rawKontenText = document.getElementById('konten').value;
       const formatHtmlContent = rawKontenText
         .split('\n')
@@ -183,11 +166,9 @@
         .map(p => `<p>${p.trim()}</p>`)
         .join('');
 
-      // Berikan proteksi loading spinner UI di button submit
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> Memproses Penyimpanan Sheets...`;
 
-      // Buat form data payload untuk dikirim ke GAS
       const payload = new URLSearchParams();
       payload.append('judul', judul);
       payload.append('kategori', kategori);
@@ -208,7 +189,7 @@
         if (res.status === "success") {
           alert(isEditingOldArticle ? "Artikel berhasil direvisi di database Google Sheets!" : "Artikel Baru Berhasil Ditambahkan ke Google Sheets!");
           clearWorkspaceForm();
-          fetchDatabaseLogs(); // Muat ulang log histori tabel
+          fetchDatabaseLogs(); 
         } else {
           alert("Gagal menyimpan data: " + res.message);
         }
@@ -221,7 +202,6 @@
       }
     }
 
-    // Memuat riwayat data artikel dari sheet untuk mode edit kembali
     async function fetchDatabaseLogs() {
       const logsList = document.getElementById('database-logs-list');
       logsList.innerHTML = `<p class="text-xs text-gray-400 font-light text-center py-4"><i class="fas fa-spinner animate-spin"></i> Menghubungkan ke server...</p>`;
@@ -237,14 +217,12 @@
           }
           
           logsList.innerHTML = "";
-          // Urutkan riwayat dari yang paling baru diinput
           const riwayatTerbalik = [...res.data].reverse();
 
           riwayatTerbalik.forEach((item) => {
             const logRow = document.createElement('div');
             logRow.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center gap-3 hover:bg-blue-50/40 transition-colors";
             
-            // Bungkus data dengan aman untuk dikirim ke fungsi klik workspace
             const dataEscaped = JSON.stringify(item.konten).replace(/"/g, '&quot;');
             
             logRow.innerHTML = `
@@ -264,18 +242,14 @@
       }
     }
 
-    // --- BAGIAN PERBAIKAN UNTUK MEMBENTENGi ERROR VALUE & EDITING FORMAT ---
-    // Fungsi memuat artikel lama ke workspace editor agar tidak memunculkan kode HTML mentah
     function loadArticleToWorkspace(kategori, sumber, gambar, judul, kontenEscaped) {
       if (confirm(`Muat kembali artikel "${judul}" ke workspace?`)) {
-        isEditingOldArticle = true; // Aktifkan kunci pengaman draf edit data lama
+        isEditingOldArticle = true; 
         document.getElementById('edit-indicator-badge').classList.remove('hidden');
 
-        // Membaca text HTML dengan aman dan mengubah tag </p> atau <br> kembali menjadi baris baru (\n)
         let doc = new DOMParser().parseFromString(kontenEscaped, "text/html");
         let kontenHTML = doc.body.innerHTML;
         
-        // Konversi tag paragraf menjadi enter bersih di textarea
         let cleanTextareaContent = kontenHTML
           .replace(/<\/p>/g, "\n")
           .replace(/<p[^>]*>/g, "")
@@ -296,7 +270,6 @@
       }
     }
 
-    // Menghapus seluruh teks di form workspace dan mengembalikan ke setelan pabrik
     function clearWorkspaceForm() {
       document.getElementById('judul').value = "";
       document.getElementById('kategori').value = "Gadget";
@@ -309,10 +282,9 @@
       
       syncCardPreview();
       trackContentStats();
-      localStorage.removeItem('cms_workspace_draft'); // Hapus draf autosave lokal
+      localStorage.removeItem('cms_workspace_draft'); 
     }
 
-    // Fitur Tambahan: Auto Save Draft lokal ke browser agar ketikan tidak hilang saat tak sengaja ter-refresh
     function saveCurrentDraft() {
       const draft = {
         judul: document.getElementById('judul').value,
@@ -325,7 +297,6 @@
       localStorage.setItem('cms_workspace_draft', JSON.stringify(draft));
     }
 
-    // Memuat otomatis draf tulisan terakhir jika ada di memori browser
     function loadSavedDraft() {
       const saved = localStorage.getItem('cms_workspace_draft');
       if (saved) {
@@ -347,7 +318,6 @@
       }
     }
 
-    // Daftarkan event pengetikan interaktif pada formulir
     const formFields = ['judul', 'kategori', 'sumber', 'gambar', 'konten'];
     formFields.forEach(id => {
       document.getElementById(id).addEventListener('input', () => {
@@ -361,7 +331,6 @@
       saveCurrentDraft();
     });
 
-    // Inisialisasi awal saat halaman admin diakses browser
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedDraft();
       syncCardPreview();
