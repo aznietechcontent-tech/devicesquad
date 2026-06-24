@@ -82,8 +82,7 @@
       </div>
     </div>
 
-    <div id="articles-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      </div>
+    <div id="articles-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
     <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
       <div class="bg-gray-100 p-4 rounded-full text-gray-400 text-3xl mb-4 w-16 h-16 flex items-center justify-center">
@@ -127,13 +126,13 @@
     </div>
   </footer>
 
- <script>
+  <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     let globalArticles = [];
     let currentCategoryFilter = "Semua";
 
-    // FIX UTAMA: Mengambil data dan mengurutkannya berdasarkan ID terbesar (Terbaru)
-    async function loadArticles() {
+    // FUNGSI UTAMA: Mengambil data dan mengurutkan secara mutlak (Terbaru di Atas)
+    async function fetchArticles() {
       const container = document.getElementById('articles-container');
       const badge = document.getElementById('total-articles-badge');
       container.innerHTML = `
@@ -152,10 +151,9 @@
           return;
         }
 
-        // KUNCI URUTAN: Urutkan data berdasarkan ID secara Descending (ID terbesar/terbaru wajib di atas)
+        // URUTKAN DI SINI: Artikel ID terbesar ditaruh paling atas
         globalArticles = arrayData.sort((a, b) => Number(b.id) - Number(a.id));
         
-        // Render data ke tampilan komputer & HP
         renderArticles();
 
       } catch (err) {
@@ -165,7 +163,7 @@
       }
     }
 
-    // FIX RENDER: Menampilkan data secara dinamis berdasarkan filter & pencarian tanpa merusak urutan terbaru
+    // FUNGSI RENDER: Menampilkan data ke layar komputer & HP
     function renderArticles() {
       const container = document.getElementById('articles-container');
       const emptyState = document.getElementById('empty-state');
@@ -231,7 +229,7 @@
             </div>
           </div>
         `;
-        container.appendChild(card); // Tetap appendChild karena susunan array globalArticles sudah di-sort turun di atas
+        container.appendChild(card);
       });
     }
 
@@ -295,8 +293,8 @@
     document.getElementById('search-input-mobile')?.addEventListener('input', renderArticles);
     document.getElementById('article-modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-    // Jalankan loadArticles saat halaman dibuka pertama kali
-    window.addEventListener('DOMContentLoaded', loadArticles);
+    // FIX UTAMA SINKRONISASI: Menjamin fungsi dipanggil dengan nama yang benar saat dibuka
+    window.addEventListener('DOMContentLoaded', fetchArticles);
   </script>
 </body>
 </html>
