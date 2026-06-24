@@ -4,324 +4,396 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Device Squad - Portal Info Gadget Terkini</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome untuk Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;  
+      overflow: hidden;
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
-  <!-- NAVIGATION BAR -->
-  <nav class="bg-slate-800 border-b border-slate-700/60 p-4 shadow-lg sticky top-0 z-45">
-    <div class="container mx-auto flex justify-between items-center">
-       <div class="flex items-center gap-3">
-        <img src="devicesquad.jpeg" alt="Logo Device Squad" class="h-8 w-8 rounded-lg object-cover shadow-md shadow-cyan-500/10 border border-slate-700/50">
-        <h1 class="text-xl font-black tracking-tight text-white uppercase leading-none">Device <span class="text-cyan-400">Squad</span></h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <span class="flex h-2 w-2 relative">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-700">Live</span>
-      </div>
-    </div>
-  </nav>
-
-  <!-- MAIN HEADER & SEARCH BAR -->
-  <main class="container mx-auto px-4 my-8 flex-grow max-w-6xl">
-    
-    <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-5 shadow-xl mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
-      <!-- Navigasi Filter Kategori -->
-      <div id="category-filters" class="flex flex-wrap gap-2 w-full md:w-auto">
-        <button id="btn-semua" onclick="filterCategory('semua')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-cyan-500 text-slate-900 shadow-md shadow-cyan-500/20">
-          Semua
-        </button>
-        <button id="btn-Gadget" onclick="filterCategory('Gadget')" class="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-slate-700 text-slate-300 hover:bg-slate-600">
-          Gadget
-        </button>
-        <button id="btn-Software" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
-          Software
-        </button>
-        <button id="btn-AIFuture" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
-          AI & Future
-        </button>
-        <button id="btn-Cybersecurity" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
-          Cybersecurity
-        </button>
-        <button id="btn-Game" disabled class="text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-800 text-slate-600 border border-slate-700/30 opacity-50 cursor-not-allowed">
-          Game
-        </button>
-      </div>
-
-      <!-- Kotak Pencarian -->
-      <div class="relative w-full md:w-72">
-        <input type="text" id="search-input" oninput="handleSearch()" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition shadow-inner" placeholder="Cari info gadget...">
-        <span class="absolute right-3.5 top-3 text-slate-500 text-xs">🔍</span>
-      </div>
-    </div>
-
-    <!-- WRAPPER UTAMA DATA BERITA -->
-    <div>
-      <!-- Status Loading / Pesan Error -->
-      <div id="loading-status" class="text-center py-20 bg-slate-800/30 border border-dashed border-slate-700 rounded-2xl shadow-inner">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-cyan-500 border-t-transparent mb-4"></div>
-        <p class="text-slate-400 text-sm font-medium tracking-wide">Menghubungkan ke database Device Squad & memuat artikel...</p>
-      </div>
-
-      <!-- Grid Tempat Kartu Artikel Muncul -->
-      <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-        <!-- Disuntikkan secara dinamis melalui JavaScript -->
-      </div>
-
-      <!-- Tombol Load More -->
-      <div id="load-more-container" class="text-center mt-10 hidden">
-        <button onclick="loadMore()" class="bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 px-6 py-3 rounded-xl text-sm font-bold shadow-md hover:border-slate-600 transition cursor-pointer">
-          Muat Berita Lainnya 👇
-        </button>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-600 tracking-wide mt-12">
-    <div class="container mx-auto px-4">
-      <p>&copy; 2026 <span class="text-slate-400 font-bold">Device Squad</span>. Ditenagai oleh Google Sheets API & GitHub Pages.</p>
-    </div>
-  </footer>
-
-  <!-- MODAL BACA SELENGKAPNYA -->
- <div id="article-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" onclick="closeModal()">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl" onclick="event.stopPropagation()">
-      
-      <div class="relative bg-slate-950 flex items-center justify-center overflow-hidden h-[380px] shrink-0 border-b border-slate-700/50">
-        <img id="modal-img-blur" class="absolute inset-0 w-full h-full object-cover opacity-15 blur-2xl scale-110 pointer-events-none" src="">
-        
-        <img id="modal-img" class="w-auto h-full max-w-full object-contain relative z-10 p-2" src="" alt="Cover">
-        
-        <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-900/80 hover:bg-slate-950 text-white font-bold h-9 w-9 rounded-full flex items-center justify-center shadow-lg transition cursor-pointer z-20 border border-slate-700/40">✕</button>
-      </div>
-
-      <div class="p-6 overflow-y-auto flex-grow">
-        <div class="flex items-center gap-3 mb-4">
-          <span id="modal-category" class="text-xs font-bold bg-cyan-950 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-900/50"></span>
-          <span id="modal-date" class="text-xs text-slate-500"></span>
-        </div>
-        
-        <h2 id="modal-title" class="text-xl md:text-2xl font-extrabold text-white leading-snug mb-4"></h2>
-        
-        <div class="border-b border-slate-700/60 my-4"></div>
-        
-        <div id="modal-content" class="text-slate-300 text-sm leading-relaxed space-y-4 whitespace-pre-line">
+  <!-- TOP BAR & NAVIGATION -->
+  <header class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl x-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="bg-blue-600 text-white p-2 rounded-lg shadow-md shadow-blue-200">
+            <i class="fas fa-laptop-code text-xl"></i>
           </div>
+          <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Device Squad</span>
+        </div>
 
-        <div class="mt-8 pt-4 border-t border-slate-700/60 flex justify-end">
-          <a id="modal-source-link" href="#" target="_blank" class="text-xs bg-slate-900 border border-slate-700 text-cyan-400 hover:text-cyan-300 px-4 py-2.5 rounded-xl font-semibold shadow-md transition hidden">
-            Kunjungi Sumber Berita Asli 🌐
+        <!-- Search Bar -->
+        <div class="flex-1 max-w-md mx-8 hidden md:block">
+          <div class="relative">
+            <input type="text" id="search-input" placeholder="Cari info gadget, review, tutorial..." class="w-full bg-gray-100 pl-10 pr-4 py-2 rounded-full border border-transparent focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-sm">
+            <div class="absolute left-3 top-2.5 text-gray-400">
+              <i class="fas fa-search"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Menu -->
+        <div class="flex items-center gap-4">
+          <a href="admin.html" class="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors bg-gray-100 hover:bg-blue-50 px-3 py-2 rounded-lg">
+            <i class="fas fa-user-shield"></i>
+            <span>Admin</span>
           </a>
         </div>
       </div>
+    </div>
+  </header>
 
+  <!-- HERO SECTION -->
+  <section class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white py-12 px-4 shadow-inner">
+    <div class="max-w-4xl mx-auto text-center">
+      <span class="bg-blue-500/30 text-blue-200 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Update Setiap Hari</span>
+      <h1 class="text-3xl md:text-4xl font-bold mt-3 mb-4 leading-tight">Eksplorasi Dunia Teknologi & Gadget Terupdate</h1>
+      <p class="text-blue-100 max-w-2xl mx-auto text-sm md:text-base font-light">Dapatkan review jujur, spesifikasi mendalam, berita terhangat, dan tips trik seputar smartphone, laptop, serta perangkat pintar lainnya.</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- CATEGORY TABS & MOBILE SEARCH -->
+    <div class="flex flex-col gap-4 mb-8">
+      <!-- Mobile Search Field -->
+      <div class="block md:hidden w-full">
+        <div class="relative">
+          <input type="text" id="search-input-mobile" placeholder="Cari info gadget..." class="w-full bg-white pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500 transition-all text-sm shadow-sm">
+          <div class="absolute left-3 top-3 text-gray-400">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="flex items-center justify-between border-b border-gray-200 pb-3 overflow-x-auto scrollbar-none">
+        <div class="flex gap-2" id="category-tabs">
+          <button onclick="filterCategory('Semua')" class="category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-blue-600 text-white shadow-md shadow-blue-100" data-category="Semua">Semua</button>
+          <button onclick="filterCategory('Gadget')" class="category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200" data-category="Gadget">Gadget</button>
+          <button onclick="filterCategory('Laptop')" class="category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200" data-category="Laptop">Laptop</button>
+          <button onclick="filterCategory('Spesifikasi')" class="category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200" data-category="Spesifikasi">Spesifikasi</button>
+          <button onclick="filterCategory('Tutorial')" class="category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200" data-category="Tutorial">Tutorial</button>
+        </div>
+        <div class="text-xs text-gray-500 font-medium whitespace-nowrap pl-4" id="total-articles-badge">
+          Memuat artikel...
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTICLES GRID -->
+    <div id="articles-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Loading Skeleton Templates -->
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse border border-gray-100">
+        <div class="bg-gray-200 h-48 w-full"></div>
+        <div class="p-5 flex flex-col gap-3">
+          <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div class="h-6 bg-gray-200 rounded w-full mt-1"></div>
+          <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+          <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
+            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse border border-gray-100">
+        <div class="bg-gray-200 h-48 w-full"></div>
+        <div class="p-5 flex flex-col gap-3">
+          <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div class="h-6 bg-gray-200 rounded w-full mt-1"></div>
+          <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+          <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
+            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse border border-gray-100">
+        <div class="bg-gray-200 h-48 w-full"></div>
+        <div class="p-5 flex flex-col gap-3">
+          <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div class="h-6 bg-gray-200 rounded w-full mt-1"></div>
+          <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+          <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
+            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPTY DATA STATE -->
+    <div id="empty-state" class="hidden flex-col items-center justify-center py-16 text-center">
+      <div class="bg-gray-100 p-4 rounded-full text-gray-400 text-3xl mb-4 w-16 h-16 flex items-center justify-center">
+        <i class="fas fa-newspaper"></i>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-700">Tidak ada artikel ditemukan</h3>
+      <p class="text-gray-500 text-sm max-w-sm mt-1">Coba gunakan kata kunci pencarian lain atau pilih kategori yang berbeda.</p>
+    </div>
+  </main>
+
+  <!-- MODAL BACA ARTIKEL -->
+  <div id="article-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-300 transform" id="modal-content-wrapper">
+      <!-- Modal Header Banner -->
+      <div class="relative h-56 md:h-64 w-full bg-gray-100 flex-shrink-0">
+        <img id="modal-image" src="" alt="Gambar Artikel" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        
+        <!-- Close Button -->
+        <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Category Tag Overlay -->
+        <span id="modal-category" class="absolute bottom-4 left-5 bg-blue-600 text-white text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm">Kategori</span>
+      </div>
+
+      <!-- Modal Body (Scrollable Text) -->
+      <div class="p-6 overflow-y-auto flex-grow text-gray-700 leading-relaxed space-y-4">
+        <h2 id="modal-title" class="text-xl md:text-2xl font-bold text-gray-900 leading-snug">Judul Artikel Lengkap</h2>
+        
+        <!-- Meta Info -->
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 pt-1 pb-3 border-b border-gray-100">
+          <span class="flex items-center gap-1"><i class="far fa-calendar-alt"></i> <span id="modal-date">Tanggal</span></span>
+          <span class="flex items-center gap-1"><i class="fas fa-link"></i> <a id="modal-source" href="#" target="_blank" class="text-blue-600 hover:underline">Lihat Sumber Asli</a></span>
+        </div>
+
+        <!-- Main Text Content -->
+        <div id="modal-text" class="text-sm md:text-base font-normal text-gray-600 space-y-3 pt-2">
+          <!-- Paragraf konten diisi dinamis oleh JS -->
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
+        <button onclick="closeModal()" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl text-sm font-medium transition-colors">Tutup</button>
+      </div>
     </div>
   </div>
 
-  <!-- CORE JAVASCRIPT ENGINE -->
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 text-sm py-6 mt-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 text-center flex flex-col sm:flex-row justify-between items-center gap-3">
+      <p>&copy; 2026 <span class="text-white font-medium">Device Squad</span>. All rights reserved.</p>
+      <div class="flex gap-4 text-xs">
+        <a href="#" class="hover:text-white transition-colors">Tentang Kami</a>
+        <a href="#" class="hover:text-white transition-colors">Kebijakan Privasi</a>
+        <a href="#" class="hover:text-white transition-colors">Kontak</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CORE APPS ARCHITECTURE JAVASCRIPT -->
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
+    // URL Web App Google Apps Script Anda yang terpusat
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec";
     
-    let globalArticles = [];      
-    let currentCategory = "semua"; 
-    let searchQuery = "";         
-    
-    const ITEMS_PER_PAGE = 6;      
-    let currentLimit = ITEMS_PER_PAGE; 
+    // State penyimpanan data lokal aplikasi runtime
+    let globalArticles = [];
+    let currentCategoryFilter = "Semua";
 
-    // 1. Ambil Data dari API
+    // Fungsi fetch data utama dari database Sheets via API
     async function loadArticles() {
-      const loadingElement = document.getElementById('loading-status');
-      const gridElement = document.getElementById('articles-grid');
-      
+      const container = document.getElementById('articles-container');
+      const emptyState = document.getElementById('empty-state');
+      const badge = document.getElementById('total-articles-badge');
+
       try {
-        console.log("Memulai koneksi database...");
-        const response = await fetch(API_URL);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const response = await fetch(`${SCRIPT_URL}?action=read`);
+        const result = await response.json();
+
+        if (result.status === "success" && Array.isArray(result.data)) {
+          // Balik urutan agar artikel terbaru muncul di paling atas
+          globalArticles = result.data.reverse();
+          renderArticles();
+        } else {
+          throw new Error("Format respons data salah");
         }
-        
-        globalArticles = await response.json();
-        console.log("Data diterima:", globalArticles);
-
-        if (loadingElement) loadingElement.classList.add('hidden');
-        if (gridElement) gridElement.classList.remove('hidden');
-        
-        applyFilterAndSearch(); 
-
       } catch (error) {
-        console.error("Koneksi gagal:", error);
-        if (loadingElement) {
-          loadingElement.innerHTML = `
-            <p class="text-red-400 font-bold text-base">Gagal memuat basis data Device Squad.</p>
-            <p class="text-xs text-slate-500 mt-2 bg-slate-900/60 py-2 px-4 inline-block rounded-lg border border-slate-700/40">Sebab: ${error.message}</p>
-            <br>
-            <button onclick="loadArticles()" class="mt-4 bg-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl text-cyan-400 hover:bg-slate-600 transition cursor-pointer">Coba Hubungkan Ulang</button>
-          `;
-        }
+        console.error("Gagal memuat artikel:", error);
+        container.innerHTML = "";
+        badge.innerText = "Gagal memuat data";
+        emptyState.classList.remove('hidden');
       }
     }
 
-    // 2. Pemrosesan Filter, Search, dan Batasan Tampilan (Pagination)
-    function applyFilterAndSearch() {
-      const gridElement = document.getElementById('articles-grid');
-      const loadMoreContainer = document.getElementById('load-more-container');
+    // Fungsi render komponen card HTML ke halaman web secara dinamis
+    function renderArticles() {
+      const container = document.getElementById('articles-container');
+      const emptyState = document.getElementById('empty-state');
+      const badge = document.getElementById('total-articles-badge');
       
-      if (!gridElement) return;
-      gridElement.innerHTML = ""; // Bersihkan isi grid lama
+      // Ambil nilai filter kata kunci dari kolom pencarian (baik desktop maupun mobile)
+      const inputCari = document.getElementById('search-input') || document.querySelector('input[placeholder*="Cari"]');
+      const inputMobile = document.getElementById('search-input-mobile');
+      const searchKeyword = (inputCari ? inputCari.value.toLowerCase() : "") || (inputMobile ? inputMobile.value.toLowerCase() : "");
 
-      // --- LOGIKA MESIN PENYARING YANG HILANG SEBELUMNYA ---
-      let filtered = globalArticles.filter(art => {
-        const matchCategory = (currentCategory === "semua") || 
-                              (art.kategori && art.kategori.toLowerCase() === currentCategory.toLowerCase());
-        
-        const textSearch = searchQuery.toLowerCase();
-        const matchSearch = !searchQuery || 
-                            (art.judul && art.judul.toLowerCase().includes(textSearch)) || 
-                            (art.konten && art.konten.toLowerCase().includes(textSearch));
-        
-        return matchCategory && matchSearch;
+      // Proses filter ganda: Berdasarkan Kategori DAN Kata Kunci Judul/Konten
+      const filtered = globalArticles.filter(item => {
+        const matchCategory = (currentCategoryFilter === "Semua" || item.kategori === currentCategoryFilter);
+        const matchKeyword = item.judul.toLowerCase().includes(searchKeyword) || item.konten.toLowerCase().includes(searchKeyword);
+        return matchCategory && matchKeyword;
       });
 
-      // Potong total item sesuai limit halaman (Pagination)
-      const itemsToRender = filtered.slice(0, currentLimit);
+      // Bersihkan container dari kerangka loading skeleton lama
+      container.innerHTML = "";
 
-      // Tampilkan status jika pencarian kosong
-      if (itemsToRender.length === 0) {
-        gridElement.innerHTML = `
-          <div class="col-span-full text-center py-12 bg-slate-800/20 border border-slate-700/40 rounded-2xl">
-            <p class="text-slate-400 text-sm">Tidak ada artikel gadget yang cocok ditemukan.</p>
-          </div>
-        `;
-        if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
+      if (filtered.length === 0) {
+        emptyState.classList.remove('hidden');
+        badge.innerText = "0 artikel ditemukan";
         return;
       }
 
-      // Loop rendering kartu HTML kustom stabil
-      itemsToRender.forEach((art) => {
-        const originalIndex = globalArticles.findIndex(a => a.id === art.id);
-        const fallbackImg = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
-        const kontenBersih = (art.konten || "").replace(/<\/?[^>]+(>|$)/g, "");
+      emptyState.classList.add('hidden');
+      badge.innerText = `${filtered.length} artikel tersedia`;
 
-        const cardHTML = `
-          <div class="bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-700/40 flex flex-col justify-between h-full transition duration-300 hover:-translate-y-1 hover:shadow-cyan-500/5 hover:border-slate-600">
-            
-            <div class="flex flex-col flex-grow">
-              <!-- Pembungkus Gambar Fleksibel Rasio 4:5 Instagram -->
-              <div class="w-full h-72 bg-slate-950 flex items-center justify-center overflow-hidden relative border-b border-slate-700/30">
-                <img class="absolute inset-0 w-full h-full object-cover opacity-15 blur-md" src="${art.gambar || fallbackImg}">
-                <img class="max-w-full max-h-full object-contain relative z-10" src="${art.gambar || fallbackImg}" alt="Cover">
-              </div>
-              
-              <div class="p-5 flex-grow">
-                <span class="text-xs font-semibold bg-cyan-950/80 text-cyan-400 px-2.5 py-1 rounded-md border border-cyan-800/30">
-                  ${art.kategori || 'Gadget'}
-                </span>
-                <h2 class="text-base font-bold mt-3 text-white line-clamp-2 leading-snug">
-                  ${art.judul || 'Tanpa Judul'}
-                </h2>
-                <p class="text-slate-400 text-xs mt-2 line-clamp-3 leading-relaxed">
-                  ${kontenBersih}
-                </p>
-              </div>
-            </div>
-            
-            <div class="p-5 pt-0 border-t border-slate-700/20 mt-auto flex justify-between items-center h-14">
-              <span class="text-[11px] text-slate-500 font-medium">${art.tanggal || ''}</span>
-              <button onclick="openModal(${originalIndex})" class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-1 cursor-pointer">
-                Baca Selengkapnya &rarr;
+      // Iterasi data untuk menyusun komponen kartu
+      filtered.forEach((article) => {
+        const imageSrc = article.gambar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80";
+        const dateFormatted = formatDate(article.tanggal);
+        
+        // Buat elemen pembungkus teks murni tanpa tag HTML untuk cuplikan deskripsi pendek card
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = article.konten;
+        const plainTextContent = tempDiv.textContent || tempDiv.innerText || "";
+
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 flex flex-col group hover:-translate-y-0.5";
+        card.innerHTML = `
+          <div class="relative h-48 bg-gray-100 overflow-hidden">
+            <img src="${imageSrc}" alt="${article.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm">${article.kategori}</span>
+          </div>
+          <div class="p-5 flex flex-col flex-grow">
+            <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 text-base leading-snug mb-2 cursor-pointer" onclick="openModal(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+              ${article.judul}
+            </h3>
+            <p class="text-gray-500 text-xs md:text-sm line-clamp-3 font-light mb-4 flex-grow">
+              ${plainTextContent}
+            </p>
+            <div class="flex justify-between items-center pt-3 border-t border-gray-50 mt-auto">
+              <span class="text-xs text-gray-400 font-light flex items-center gap-1">
+                <i class="far fa-calendar"></i> ${dateFormatted}
+              </span>
+              <button onclick="openModal(${JSON.stringify(article).replace(/"/g, '&quot;')})" class="text-xs font-semibold text-blue-600 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                Baca Selengkapnya <i class="fas fa-arrow-right text-[10px]"></i>
               </button>
             </div>
-
           </div>
         `;
-        gridElement.innerHTML += cardHTML;
+        container.appendChild(card);
       });
-
-      // Atur tombol Load More otomatis muncul/sembunyi
-      if (loadMoreContainer) {
-        if (filtered.length > currentLimit) {
-          loadMoreContainer.classList.remove('hidden');
-        } else {
-          loadMoreContainer.classList.add('hidden');
-        }
-      }
     }
 
-    function loadMore() {
-      currentLimit += ITEMS_PER_PAGE; 
-      applyFilterAndSearch();          
-    }
+    // Fungsi interaktif membuka jendela detail modal baca artikel
+    function openModal(article) {
+      const modal = document.getElementById('article-modal');
+      const wrapper = document.getElementById('modal-content-wrapper');
 
-    // 3. Efek Visual Tombol Kategori Aktif
-    function filterCategory(category) {
-      currentLimit = ITEMS_PER_PAGE; 
-      currentCategory = category;
+      document.getElementById('modal-image').src = article.gambar || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80";
+      document.getElementById('modal-category').innerText = article.kategori;
+      document.getElementById('modal-title').innerText = article.judul;
+      document.getElementById('modal-date').innerText = formatDate(article.tanggal);
       
-      const buttons = document.querySelectorAll('#category-filters button:not([disabled])');
-      buttons.forEach(btn => {
-        if (btn.id === `btn-${category}`) {
-          btn.className = "text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-cyan-500 text-slate-900 shadow-md shadow-cyan-500/20";
-        } else {
-          btn.className = "text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer bg-slate-700 text-slate-300 hover:bg-slate-600";
-        }
-      });
-      applyFilterAndSearch(); 
-    }
-
-    function handleSearch() {
-      currentLimit = ITEMS_PER_PAGE; 
-      searchQuery = document.getElementById('search-input').value;
-      applyFilterAndSearch(); 
-    }
-
-    // 4. Manajemen Buka & Tutup Modal Baca Detail
-    function openModal(index) {
-      const art = globalArticles[index];
-      if (!art) return;
-      const fallbackImg = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500';
-      
-      document.getElementById('modal-title').innerText = art.judul || 'Tanpa Judul';
-      document.getElementById('modal-category').innerText = art.kategori || 'Gadget';
-      document.getElementById('modal-date').innerText = art.tanggal || '';
-      
-      document.getElementById('modal-content').innerHTML = art.konten || ''; 
-      document.getElementById('modal-img').src = art.gambar || fallbackImg;
-      document.getElementById('modal-img-blur').src = art.gambar || fallbackImg;
-      
-      const sourceLinkElement = document.getElementById('modal-source-link');
-      if (art.sumber && art.sumber !== "#" && art.sumber.trim() !== "") {
-        sourceLinkElement.href = art.sumber;
-        sourceLinkElement.classList.remove('hidden');
+      const sourceLink = document.getElementById('modal-source');
+      if (article.sumber && article.sumber !== "#" && article.sumber.trim() !== "") {
+        sourceLink.href = article.sumber;
+        sourceLink.parentElement.classList.remove('hidden');
       } else {
-        sourceLinkElement.classList.add('hidden'); 
+        sourceLink.parentElement.classList.add('hidden');
       }
-      
-      document.getElementById('article-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
+
+      // Memasukkan konten teks artikel
+      const textContainer = document.getElementById('modal-text');
+      textContainer.innerHTML = article.konten;
+
+      // Animasi transisi CSS memunculkan jendela modal
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        wrapper.classList.remove('scale-95', 'opacity-0');
+        wrapper.classList.add('scale-100', 'opacity-100');
+      }, 20);
+      document.body.style.overflow = 'hidden'; // Kunci scroll layar belakang
     }
 
+    // Fungsi menutup jendela modal baca artikel
     function closeModal() {
-      document.getElementById('article-modal').classList.add('hidden');
-      document.body.style.overflow = 'auto';
+      const modal = document.getElementById('article-modal');
+      const wrapper = document.getElementById('modal-content-wrapper');
+
+      wrapper.classList.remove('scale-100', 'opacity-100');
+      wrapper.classList.add('scale-95', 'opacity-0');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Aktifkan kembali scroll utama
+      }, 250);
     }
+
+    // Sistem penapis Tab Kategori aktif
+    function filterCategory(categoryName) {
+      currentCategoryFilter = categoryName;
+      
+      // Mutasi style visual tombol tab aktif dan tidak aktif
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        if (btn.getAttribute('data-category') === categoryName) {
+          btn.className = "category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-blue-600 text-white shadow-md shadow-blue-100";
+        } else {
+          btn.className = "category-btn px-4 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200";
+        }
+      });
+
+      renderArticles();
+    }
+
+    // Utilitas format tanggal ISO/String ke format lokal bahasa Indonesia
+    function formatDate(dateString) {
+      if (!dateString) return "-";
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return dateString; 
+        return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      } catch (e) {
+        return dateString;
+      }
+    }
+
+    // Event Listener real-time pencarian teks
+    document.getElementById('search-input')?.addEventListener('input', renderArticles);
+    document.getElementById('search-input-mobile')?.addEventListener('input', renderArticles);
+
+    // Menutup modal otomatis jika area hitam di luar box diklik pengguna
+    document.getElementById('article-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
 
     // --- BAGIAN PERBAIKAN UNTUK MEMBENTENGi ERROR VALUE ---
     // Mengamankan pemanggilan loadArticles agar tidak crash saat mencari elemen input
     const originalLoadArticles = loadArticles;
     loadArticles = function() {
-      // Memeriksa apakah elemen pencarian atau filter utama ada di HTML sebelum memuat artikel
-      const inputCari = document.getElementById('cari-input') || document.querySelector('input[placeholder*="Cari"]');
+      // PERBAIKAN: Mengubah pencarian ke 'search-input' sesuai ID elemen di HTML atas
+      const inputCari = document.getElementById('search-input') || document.querySelector('input[placeholder*="Cari"]');
       
-      // Jika ditemukan tetapi belum punya ID yang benar, kita suntikkan ID secara otomatis agar skrip tidak rusak
-      if (inputCari && !document.getElementById('cari-input')) {
-        inputCari.id = 'cari-input';
+      // Jika ditemukan tetapi belum punya ID yang benar, kita suntikkan ID secara otomatis
+      if (inputCari && !document.getElementById('search-input')) {
+        inputCari.id = 'search-input';
       }
       
       // Jalankan fungsi pemuatan asli dengan aman
@@ -333,7 +405,5 @@
     // Menjalankan fungsi utama setelah seluruh dokumen selesai dimuat browser
     window.addEventListener('DOMContentLoaded', loadArticles);
   </script>
-</body>
-</html>
 </body>
 </html>
