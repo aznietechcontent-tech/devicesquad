@@ -132,59 +132,44 @@
     let globalArticles = [];
     let currentCategoryFilter = "Semua";
 
-    async function loadArticles() {
-      const container = document.getElementById('articles-container');
-      const emptyState = document.getElementById('empty-state');
-      const badge = document.getElementById('total-articles-badge');
+    async function fetchArticles() {
+  const container = document.getElementById('articles-container'); // Sesuaikan dengan ID container Anda
+  container.innerHTML = `<p>Memuat artikel...</p>`;
 
-      container.innerHTML = `<p class="text-center text-gray-500 py-8 col-span-3">Menghubungkan ke database...</p>`;
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbwoV3Kxwrv1zama2ljWB8SWiv-3w5fjHp52_9FFDarEo4Ssh7HCzOlOoK60QMFejVNv/exec?action=read");
+    const arrayData = await response.json();
 
-      try {
-        // Pemanggilan data murni menggunakan metode pembacaan teks lama Anda untuk mencegah "Unexpected token 'j'"
-        const response = await fetch(SCRIPT_URL);
-        const textData = await response.text();
-        
-        let parsedData;
-        try {
-          parsedData = JSON.parse(textData);
-        } catch (e) {
-          // Fallback jika database mengirimkan string text-form-encoded
-          const urlParams = new URLSearchParams(textData);
-          parsedData = Object.fromEntries(urlParams.entries());
-        }
-
-        let rawData = Array.isArray(parsedData) ? parsedData : (parsedData.data || parsedData.articles || []);
-        
-        // Jika data dibungkus objek tunggal, ubah menjadi array tunggal
-        if (!Array.isArray(rawData) && typeof rawData === 'object' && rawData.judul) {
-          rawData = [rawData];
-        }
-
-        if (Array.isArray(rawData) && rawData.length > 0) {
-          globalArticles = rawData.reverse();
-          renderArticles();
-        } else {
-          // Coba parse paksa jika berbentuk list data kustom
-          if(typeof parsedData === 'object') {
-             const values = Object.values(parsedData);
-             const fallbackArray = values.find(v => Array.isArray(v));
-             if (fallbackArray) {
-                globalArticles = fallbackArray.reverse();
-                renderArticles();
-                return;
-             }
-          }
-          container.innerHTML = "";
-          badge.innerText = "0 artikel tersedia";
-          emptyState.classList.remove('hidden');
-        }
-      } catch (error) {
-        console.error("Gagal memuat artikel:", error);
-        container.innerHTML = "";
-        badge.innerText = "Gagal memuat data";
-        emptyState.classList.remove('hidden');
-      }
+    if (!Array.isArray(arrayData) || arrayData.length === 0) {
+      container.innerHTML = `<p>Belum ada artikel.</p>`;
+      return;
     }
+
+    container.innerHTML = "";
+
+    // KUNCI PERBAIKAN: Paksa urutkan ID terbesar/terbaru berada di atas
+    const artikelTerbaru = arrayData.sort((a, b) => Number(b.id) - Number(a.id));
+
+    // Lakukan perulangan untuk menampilkan artikel ke HTML
+    artikelTerbaru.forEach((item) => {
+      const articleCard = document.createElement('div');
+      
+      // ... (Kode struktur tampilan card artikel Anda di sini, sesuaikan dengan kode asli Anda) ...
+      articleCard.innerHTML = `
+        <img src="${item.gambar}" alt="${item.judul}">
+        <h3>${item.judul}</h3>
+        <p>${item.kategori}</p>
+      `;
+      
+      // Gunakan appendChild seperti biasa karena datanya sudah diurutkan dengan benar di atas
+      container.appendChild(articleCard);
+    });
+
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p>Gagal memuat artikel.</p>`;
+  }
+}
 
     function renderArticles() {
       const container = document.getElementById('articles-container');
