@@ -148,19 +148,18 @@
       document.getElementById('character-counter').innerText = `${chars} karakter | ${words} kata`;
     }
 
+    // FIX AMAN: Fungsi POST Adaptif untuk Teks Mentah
     async function publishArticle(event) {
-      event.preventDefault(); // Blokir perilaku refresh halaman bawaan browser
+      event.preventDefault(); 
       
       const submitBtn = document.getElementById('submit-btn');
       const originalText = submitBtn.innerHTML;
 
-      // Ambil seluruh input dari workspace formulir
       const judul = document.getElementById('judul').value.trim();
       const kategori = document.getElementById('kategori').value;
       const sumber = document.getElementById('sumber').value.trim() || "#";
       const gambar = document.getElementById('gambar').value.trim();
       
-      // Pembungkusan Paragraf Otomatis untuk disave sebagai HTML murni agar rapi di index.html
       const rawKontenText = document.getElementById('konten').value;
       const formatHtmlContent = rawKontenText
         .split('\n')
@@ -168,11 +167,9 @@
         .map(p => `<p>${p.trim()}</p>`)
         .join('');
 
-      // Berikan proteksi loading spinner UI di button submit
       submitBtn.disabled = true;
       submitBtn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> Memproses Penyimpanan Sheets...`;
 
-      // Buat form data payload untuk dikirim ke GAS
       const payload = new URLSearchParams();
       payload.append('judul', judul);
       payload.append('kategori', kategori);
@@ -188,73 +185,86 @@
           body: payload.toString()
         });
 
-        // PERBAIKAN DI SINI: Membaca sebagai text terlebih dahulu untuk menghindari crash pembacaan JSON
         const textData = await response.text();
-        
-        let res;
-        try {
-          res = JSON.parse(textData);
-        } catch (e) {
-          // Jika server membalas dengan text biasa atau format parameter form
-          if (textData.includes("success") || textData.includes("judul=")) {
-            res = { status: "success" };
-          } else {
-            res = { status: "error", message: textData };
-          }
+        let res = { status: "error" };
+
+        if (textData.includes("success") || textData.includes("judul=")) {
+          res = { status: "success" };
+        } else {
+          try {
+            const parsed = JSON.parse(textData);
+            if (parsed.status === "success") res = { status: "success" };
+          } catch(e) {}
         }
 
         if (res.status === "success") {
           alert(isEditingOldArticle ? "Artikel berhasil direvisi di database Google Sheets!" : "Artikel Baru Berhasil Ditambahkan ke Google Sheets!");
           clearWorkspaceForm();
-          fetchDatabaseLogs(); // Muat ulang log histori tabel
+          fetchDatabaseLogs(); 
         } else {
-          alert("Gagal menyimpan data: " + res.message);
+          alert("Gagal menyimpan data: " + textData);
         }
       } catch (err) {
         console.error(err);
-        alert("Terjadi gangguan koneksi API database. Periksa pengaturan CORS/Apps Script.");
+        alert("Terjadi gangguan koneksi API database.");
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
       }
     }
 
+    // FIX AMAN: Fungsi GET Adaptif untuk Parsing Log Riwayat Parameter Form
     async function fetchDatabaseLogs() {
       const logsList = document.getElementById('database-logs-list');
       logsList.innerHTML = `<p class="text-xs text-gray-400 font-light text-center py-4"><i class="fas fa-spinner animate-spin"></i> Menghubungkan ke server...</p>`;
       
       try {
         const response = await fetch(`${SCRIPT_URL}?action=read`);
-        const res = await response.json();
-
-        if (res.status === "success" && Array.isArray(res.data)) {
-          if (res.data.length === 0) {
-            logsList.innerHTML = `<p class="text-xs text-gray-400 font-light text-center py-4">Database kosong.</p>`;
-            return;
+        const textData = await response.text();
+        
+        let arrayData = [];
+        
+        // Coba parse sebagai JSON biasa dulu
+        try {
+          const parsed = JSON.parse(textData);
+          arrayData = Array.isArray(parsed) ? parsed : (parsed.data || []);
+        } catch (e) {
+          // Jika gagal JSON, parse manual format teks URL-encoded (judul=...&kategori=...)
+          const urlParams = new URLSearchParams(textData);
+          const obj = Object.fromEntries(urlParams.entries());
+          if (obj.judul) {
+            arrayData = [obj];
           }
-          
-          logsList.innerHTML = "";
-          const riwayatTerbalik = [...res.data].reverse();
-
-          riwayatTerbalik.forEach((item) => {
-            const logRow = document.createElement('div');
-            logRow.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center gap-3 hover:bg-blue-50/40 transition-colors";
-            
-            const dataEscaped = JSON.stringify(item.konten).replace(/"/g, '&quot;');
-            
-            logRow.innerHTML = `
-              <div class="flex-1 min-w-0">
-                <p class="text-xs font-bold text-gray-900 line-clamp-2 mb-0.5">${item.judul}</p>
-                <p class="text-[10px] text-gray-400 font-medium"><span class="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${item.kategori}</span></p>
-              </div>
-              <button onclick="loadArticleToWorkspace('${item.kategori}', '${item.sumber}', '${item.gambar}', '${item.judul}', ${dataEscaped})" class="bg-white hover:bg-blue-600 text-blue-600 hover:text-white border border-gray-200 hover:border-blue-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg shadow-sm transition-all flex-shrink-0 flex items-center gap-1">
-                Edit 📝
-              </button>
-            `;
-            logsList.appendChild(logRow);
-          });
         }
+
+        if (arrayData.length === 0) {
+          logsList.innerHTML = `<p class="text-xs text-gray-400 font-light text-center py-4">Database kosong atau format tidak terbaca.</p>`;
+          return;
+        }
+        
+        logsList.innerHTML = "";
+        const riwayatTerbalik = [...arrayData].reverse();
+
+        riwayatTerbalik.forEach((item) => {
+          const logRow = document.createElement('div');
+          logRow.className = "bg-gray-50 border border-gray-200 rounded-xl p-3 flex justify-between items-center gap-3 hover:bg-blue-50/40 transition-colors";
+          
+          const kontenData = item.konten || "";
+          const dataEscaped = JSON.stringify(kontenData).replace(/"/g, '&quot;');
+          
+          logRow.innerHTML = `
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-bold text-gray-900 line-clamp-2 mb-0.5">${item.judul || 'Tanpa Judul'}</p>
+              <p class="text-[10px] text-gray-400 font-medium"><span class="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${item.kategori || 'Gadget'}</span></p>
+            </div>
+            <button onclick="loadArticleToWorkspace('${item.kategori || ''}', '${item.sumber || ''}', '${item.gambar || ''}', '${item.judul || ''}', ${dataEscaped})" class="bg-white hover:bg-blue-600 text-blue-600 hover:text-white border border-gray-200 hover:border-blue-600 text-xs font-semibold px-2.5 py-1.5 rounded-lg shadow-sm transition-all flex-shrink-0 flex items-center gap-1">
+              Edit 📝
+            </button>
+          `;
+          logsList.appendChild(logRow);
+        });
       } catch (err) {
+        console.error(err);
         logsList.innerHTML = `<p class="text-xs text-rose-500 font-light text-center py-4">Gagal memuat log data.</p>`;
       }
     }
